@@ -1,0 +1,23 @@
+.card {
+    width: 272px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.imagebox {
+    position: relative;
+}
+
+.titlebox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.counter {
+    position: absolute;
+    top: 0px;
+    right: -16px;
+}

@@ -1,0 +1,30 @@
+
+.header {
+    background: #1C1C21;
+}
+
+.link {
+    background: transparent;
+    border: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+}
+
+.list {
+    width: 100%;
+    align-items: center;
+    display: grid;
+    list-style: none;
+    grid-template-columns: max-content max-content 1fr max-content;
+    padding: 0;
+    margin: 0;
+    justify-items: center;
+    max-width: 1240px;
+}
+
+.nav {
+    display: flex;
+    justify-content: center;
+}

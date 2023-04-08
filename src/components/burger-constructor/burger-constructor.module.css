@@ -1,0 +1,54 @@
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.inner {
+    max-height: 516px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.scrolled {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+.element {
+    flex-grow: unset;
+}
+
+.inner::-webkit-scrollbar {
+    width: 8px;
+    height: 464px;
+    background-color: #2F2F37;
+}
+
+.inner::-webkit-scrollbar-thumb {
+    height: 292px;
+    background-color: #8585AD;
+}
+
+.total svg {
+    width: 33px;
+    height: 33px;
+}
+
+.total {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.confirmbox {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
