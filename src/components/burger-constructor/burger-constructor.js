@@ -4,6 +4,7 @@ import burgerConstructorStyle from './burger-constructor.module.css'
 import PropTypes from "prop-types";
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
+import ingredientType from "../../utils/ingredient-type";
 
 function BurgerConstructor({data}) {
     const [state, setState] = React.useState({visible: false});
@@ -83,6 +84,6 @@ function BurgerConstructor({data}) {
 }
 
 BurgerConstructor.prototype = {
-    data: PropTypes.array
+    data: ingredientType.isRequired
 }
 export default BurgerConstructor

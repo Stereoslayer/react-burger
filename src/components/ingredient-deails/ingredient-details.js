@@ -1,4 +1,5 @@
 import ingredientDetailsStyle from './ingredient-details.module.css';
+import IngredientType from "../../utils/ingredient-type";
 
 function IngredientDetails({ingredient}) {
     const {image_large, name, calories, proteins, fat, carbohydrates} = ingredient;
@@ -20,6 +21,10 @@ function IngredientDetails({ingredient}) {
             </ul>
         </div>
     )
+}
+
+IngredientDetails.prototype = {
+    ingredient: IngredientType.isRequired
 }
 
 export default IngredientDetails;
