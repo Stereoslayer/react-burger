@@ -23,6 +23,7 @@
 
 .element {
     flex-grow: unset;
+    min-width: 536px;
 }
 
 .inner::-webkit-scrollbar {

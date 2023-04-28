@@ -3,10 +3,10 @@ import React from 'react';
 import burgerIngredientsStyles from './burger-ingredients.module.css';
 import {Tab} from "@ya.praktikum/react-developer-burger-ui-components";
 import BurgerIngredientItem from "./burger-ingredient-item/burger-ingredient-item";
-import PropTypes from "prop-types";
 import IngredientDetails from "../ingredient-deails/ingredient-details";
 import Modal from "../modal/modal";
 import ingredientType from "../../utils/ingredient-type";
+import {BurgerConstructorContext} from "../../services/burger-constructor-context";
 
 function BurgerIngredients({data}) {
     const [current, setCurrent] = React.useState('bun')
@@ -15,6 +15,12 @@ function BurgerIngredients({data}) {
     const tabRefMain = React.useRef(null);
 
     const [state, setState] = React.useState({visible: false});
+
+    const {ingredientItemDispatcher} = React.useContext(BurgerConstructorContext);
+
+    const handleAddItem = (ingredient) => {
+        ingredientItemDispatcher({type: 'add', payload: ingredient})
+    };
 
     const popupOpen = (ingredient) => {
         setState(() => {
@@ -74,17 +80,20 @@ function BurgerIngredients({data}) {
                 <h2 className="text text_type_main-medium mt-10" ref={tabRefBun}>Булки</h2>
                 <ul className={`${burgerIngredientsStyles.list} pt-6 pr-4 pl-4`}>
                     {data.map((item) => item.type === 'bun' &&
-                        <BurgerIngredientItem key={item._id} ingredient={item} popupOpen={popupOpen}/>)}
+                        <BurgerIngredientItem key={item._id} ingredient={item} /*popupOpen={popupOpen}*/
+                                              handleAddItem={handleAddItem}/>)}
                 </ul>
                 <h2 className="text text_type_main-medium mt-10" ref={tabRefSauce}>Соусы</h2>
                 <ul className={`${burgerIngredientsStyles.list} pt-6 pr-4 pl-4`}>
                     {data.map((item) => item.type === 'sauce' &&
-                        <BurgerIngredientItem key={item._id} ingredient={item} popupOpen={popupOpen}/>)}
+                        <BurgerIngredientItem key={item._id} ingredient={item} /*popupOpen={popupOpen}*/
+                                              handleAddItem={handleAddItem}/>)}
                 </ul>
                 <h2 className="text text_type_main-medium mt-10" ref={tabRefMain}>Начинки</h2>
                 <ul className={`${burgerIngredientsStyles.list} pt-6 pr-4 pl-4`}>
                     {data.map((item) => item.type === 'main' &&
-                        <BurgerIngredientItem key={item._id} ingredient={item} popupOpen={popupOpen}/>)}
+                        <BurgerIngredientItem key={item._id} ingredient={item} /*popupOpen={popupOpen}*/
+                                              handleAddItem={handleAddItem}/>)}
                 </ul>
             </div>
             {state.visible &&

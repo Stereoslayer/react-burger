@@ -1,14 +1,29 @@
 import React from 'react';
 import {Button, ConstructorElement, CurrencyIcon, DragIcon} from "@ya.praktikum/react-developer-burger-ui-components";
-import burgerConstructorStyle from './burger-constructor.module.css'
-import PropTypes from "prop-types";
+import burgerConstructorStyle from './burger-constructor.module.css';
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
 import ingredientType from "../../utils/ingredient-type";
+import {BurgerConstructorContext} from "../../services/burger-constructor-context";
 
-function BurgerConstructor({data}) {
+function BurgerConstructor() {
     const [state, setState] = React.useState({visible: false});
+    const [order, setOrder] = React.useState({
+        data: [],
+        isLoading: false,
+        hasError: false
+    });
+    const {ingredientItems, ingredientItemDispatcher} = React.useContext(BurgerConstructorContext);
+    const orderLink = 'https://norma.nomoreparties.space/api/orders';
 
+    const totalSum = React.useMemo(() =>
+            ingredientItems.reduce((acc, cur) => cur.type === "bun" ? acc + cur.price * 2 : acc + cur.price, 0),
+        [ingredientItems]
+    );
+
+    const handleDeleteItem = (index) => {
+        ingredientItemDispatcher({type: 'delete', payload: index})
+    }
     const popupOpen = () => {
         setState(prevState => (
             {
@@ -24,12 +39,30 @@ function BurgerConstructor({data}) {
             }))
     };
 
+    const createOrder = async () => {
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ingredients: ingredientItems.map(x => x._id)})
+        };
+        setOrder({...order, hasError: false, isLoading: true});
+        const res = await fetch(orderLink, requestOptions);
+        if (res.ok) {
+            const data = await res.json();
+            setOrder({data: data, isLoading: false, hasError: false});
+            popupOpen();
+            ingredientItemDispatcher({type: 'deleteAll'})
+        } else {
+            setOrder({data: [], isLoading: false, hasError: true});
+        }
+    }
+
     return (
         <section className={`${burgerConstructorStyle.container} mt-15`}>
             <div className="mb-4 mr-4">
-                {data.length && data.map((item, index) => item.type === 'bun' ?
+                {ingredientItems.length > 0 && ingredientItems.map((item) => item.type === 'bun' ?
                     <ConstructorElement
-                        key={index + 'top'}
+                        key={item._id + 'top'}
                         type="top"
                         isLocked={true}
                         text={item.name + ' (верх)'}
@@ -40,24 +73,26 @@ function BurgerConstructor({data}) {
                 }
             </div>
             <div className={`${burgerConstructorStyle.inner} pr-2`}>
-                {data.length && data.map((item, index) => item.type !== 'bun' ?
-                    <div className={burgerConstructorStyle.scrolled}>
+                {ingredientItems.length > 0 && ingredientItems.map((item, index) => item.type !== 'bun' ?
+                    <div
+                        key={index + item._id + 'icon'}
+                        className={burgerConstructorStyle.scrolled}>
                         <DragIcon type="primary"/>
                         <ConstructorElement
-                            key={index}
                             text={item.name}
                             price={item.price}
                             thumbnail={item.image}
                             extraClass={burgerConstructorStyle.element}
+                            handleClose={() => handleDeleteItem(index)}
                         />
                     </div>
                     : '')
                 }
             </div>
             <div className="mt-4 mr-4">
-                {data.length && data.map((item, index) => item.type === 'bun' ?
+                {ingredientItems.length > 0 && ingredientItems.map((item) => item.type === 'bun' ?
                     <ConstructorElement
-                        key={index + 'bot'}
+                        key={item._id + 'bot'}
                         type="bottom"
                         isLocked={true}
                         text={item.name + ' (низ)'}
@@ -69,21 +104,23 @@ function BurgerConstructor({data}) {
             </div>
             <div className={`${burgerConstructorStyle.confirmbox} mt-10 mr-4`}>
                 <div className={burgerConstructorStyle.total}>
-                    <span className="text text_type_digits-medium mr-2">2056</span>
+                    <span className="text text_type_digits-medium mr-2">{totalSum}</span>
                     <CurrencyIcon type="primary"/>
                 </div>
-                <Button htmlType="button" type="primary" size="large" extraClass="ml-10" onClick={popupOpen}>Оформить
+                <Button htmlType="button" type="primary" size="large" extraClass="ml-10" onClick={createOrder}>Оформить
                     заказ</Button>
             </div>
             {state.visible &&
                 <Modal onClose={popupClose}>
-                    <OrderDetails/>
+                    <OrderDetails orderNumber={order.data.order.number}/>
                 </Modal>}
         </section>
     )
 }
 
 BurgerConstructor.prototype = {
-    data: ingredientType.isRequired
+    ingredientItems: ingredientType.isRequired
 }
 export default BurgerConstructor
+
+
