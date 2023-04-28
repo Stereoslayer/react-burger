@@ -23,7 +23,7 @@ function IngredientDetails({ingredient}) {
     )
 }
 
-IngredientDetails.prototype = {
+IngredientDetails.propTypes = {
     ingredient: IngredientType.isRequired
 }
 

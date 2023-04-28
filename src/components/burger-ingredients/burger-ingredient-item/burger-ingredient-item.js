@@ -3,11 +3,9 @@ import burgerIngredientItemStyle from './burger-ingredient-item.module.css'
 import {Counter, CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import ingredientType from "../../../utils/ingredient-type";
 
-function BurgerIngredientItem({popupOpen, ingredient, handleAddItem}) {
+function BurgerIngredientItem({ingredient, handleAddItem}) {
     return (
-        <li className={burgerIngredientItemStyle.card} /*onClick={() => {
-            popupOpen(ingredient)
-        }}*/
+        <li className={burgerIngredientItemStyle.card}
             onClick={() => {
                 handleAddItem(ingredient)
             }}
@@ -23,9 +21,8 @@ function BurgerIngredientItem({popupOpen, ingredient, handleAddItem}) {
     )
 }
 
-BurgerIngredientItem.prototype = {
+BurgerIngredientItem.propTypes = {
     ingredient: ingredientType.isRequired,
-    popupOpen: PropTypes.func.isRequired,
     handleAddItem: PropTypes.func.isRequired
 }
 export default BurgerIngredientItem;

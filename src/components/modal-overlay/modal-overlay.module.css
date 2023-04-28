@@ -1,7 +1,7 @@
 .box {
     top: 0;
     left: 0;
-    position: absolute;
+    position: fixed;
     z-index: 100;
     display: flex;
     align-items: center;
@@ -15,7 +15,7 @@
     left: 0;
     height: 100%;
     width: 100%;
-    position: absolute;
+    position: fixed;
     background-color: rgba(0, 0, 0, 0.8);
     cursor: pointer;
 }

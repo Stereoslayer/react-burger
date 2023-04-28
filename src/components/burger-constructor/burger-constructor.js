@@ -3,8 +3,8 @@ import {Button, ConstructorElement, CurrencyIcon, DragIcon} from "@ya.praktikum/
 import burgerConstructorStyle from './burger-constructor.module.css';
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
-import ingredientType from "../../utils/ingredient-type";
 import {BurgerConstructorContext} from "../../services/burger-constructor-context";
+import {request} from "../../utils/request";
 
 function BurgerConstructor() {
     const [state, setState] = React.useState({visible: false});
@@ -14,7 +14,6 @@ function BurgerConstructor() {
         hasError: false
     });
     const {ingredientItems, ingredientItemDispatcher} = React.useContext(BurgerConstructorContext);
-    const orderLink = 'https://norma.nomoreparties.space/api/orders';
 
     const totalSum = React.useMemo(() =>
             ingredientItems.reduce((acc, cur) => cur.type === "bun" ? acc + cur.price * 2 : acc + cur.price, 0),
@@ -39,22 +38,22 @@ function BurgerConstructor() {
             }))
     };
 
-    const createOrder = async () => {
+    const createOrder = () => {
+        const endPoint = '/orders';
         const requestOptions = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ingredients: ingredientItems.map(x => x._id)})
         };
         setOrder({...order, hasError: false, isLoading: true});
-        const res = await fetch(orderLink, requestOptions);
-        if (res.ok) {
-            const data = await res.json();
-            setOrder({data: data, isLoading: false, hasError: false});
-            popupOpen();
-            ingredientItemDispatcher({type: 'deleteAll'})
-        } else {
-            setOrder({data: [], isLoading: false, hasError: true});
-        }
+        request(endPoint, requestOptions)
+            .then(data => setOrder({data: data, isLoading: false, hasError: false}))
+            .then(popupOpen)
+            .then(ingredientItemDispatcher({type: 'deleteAll'}))
+            .catch(error => {
+                setOrder({data: [], isLoading: false, hasError: true});
+                console.error('Произошла ошибка. Код ошибки =>', error);
+            });
     }
 
     return (
@@ -118,9 +117,6 @@ function BurgerConstructor() {
     )
 }
 
-BurgerConstructor.prototype = {
-    ingredientItems: ingredientType.isRequired
-}
 export default BurgerConstructor
 
 

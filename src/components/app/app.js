@@ -6,9 +6,9 @@ import BurgerConstructor from "../burger-constructor/burger-constructor";
 import {BurgerIngredientsContext} from "../../services/burger-ingredients-context";
 import {BurgerConstructorContext} from "../../services/burger-constructor-context";
 import {burgerConstructorReducer, ingInitialState} from "../../services/burger-constructor-reducer";
+import {request} from "../../utils/request";
 
 function App() {
-    const apiLink = 'https://norma.nomoreparties.space/api/ingredients';
     const [ingList, setIngList] = React.useState({
         isLoading: false,
         hasError: false,
@@ -18,15 +18,15 @@ function App() {
     const [ingredientItems, ingredientItemDispatcher] = React.useReducer(burgerConstructorReducer, ingInitialState, undefined);
 
     React.useEffect(() => {
-        const getIngredients = async () => {
+        const getIngredients = () => {
+            const endPoint = '/ingredients';
             setIngList({...ingList, hasError: false, isLoading: true});
-            const res = await fetch(apiLink);
-            if (res.ok) {
-                const data = await res.json();
-                setIngList({data: data.data, isLoading: false, hasError: false});
-            } else {
-                setIngList({data: [], isLoading: false, hasError: true});
-            }
+            request(endPoint)
+                .then(data => setIngList({data: data.data, isLoading: false, hasError: false}))
+                .catch(error => {
+                    setIngList({data: [], isLoading: false, hasError: true});
+                    console.error('Произошла ошибка. Код ошибки =>', error);
+                });
         }
 
         getIngredients();
@@ -35,9 +35,9 @@ function App() {
         <>
             <Header/>
             <main className={appStyles.main}>
-                <BurgerIngredientsContext.Provider value={{ingList}}>
+                <BurgerIngredientsContext.Provider value={{ingList, setIngList}}>
                     <BurgerConstructorContext.Provider value={{ingredientItems, ingredientItemDispatcher}}>
-                        <BurgerIngredients data={ingList.data}/>
+                        <BurgerIngredients/>
                         <BurgerConstructor/>
                     </BurgerConstructorContext.Provider>
                 </BurgerIngredientsContext.Provider>
