@@ -5,36 +5,24 @@ import {Tab} from "@ya.praktikum/react-developer-burger-ui-components";
 import BurgerIngredientItem from "./burger-ingredient-item/burger-ingredient-item";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import Modal from "../modal/modal";
-import ingredientType from "../../utils/ingredient-type";
-import {BurgerConstructorContext} from "../../services/burger-constructor-context";
-import {BurgerIngredientsContext} from "../../services/burger-ingredients-context";
+import {useDispatch, useSelector} from "react-redux";
+import {getIngredients, HIDE_ING_DETAILS} from "../../services/actions";
 
 function BurgerIngredients() {
-    const {ingList} = React.useContext(BurgerIngredientsContext);
+    const {ingredients} = useSelector(store => store.ingredients);
+    const {currentItem, visible} = useSelector(store => store.ingredientDetails);
+    const dispatch = useDispatch();
     const [current, setCurrent] = React.useState('bun')
     const tabRefBun = React.useRef(null);
     const tabRefSauce = React.useRef(null);
     const tabRefMain = React.useRef(null);
 
-    const [state, setState] = React.useState({visible: false});
+    React.useEffect(() => {
+        dispatch(getIngredients())
+    }, [])
 
-    const {ingredientItemDispatcher} = React.useContext(BurgerConstructorContext);
-
-    const handleAddItem = (ingredient) => {
-        ingredientItemDispatcher({type: 'add', payload: ingredient})
-    };
-
-    const popupOpen = (ingredient) => {
-        setState(() => {
-            return {
-                visible: true,
-                currentItem: {...ingredient}
-            }
-        })
-    };
     const popupClose = () => {
-        setState(
-            {visible: false})
+        dispatch({type: HIDE_ING_DETAILS})
     };
     const handleScroll = (val) => {
         if (val.target.scrollTop < tabRefSauce.current.offsetTop) {
@@ -81,26 +69,23 @@ function BurgerIngredients() {
             <div className={burgerIngredientsStyles.container} onScroll={handleScroll}>
                 <h2 className="text text_type_main-medium mt-10" ref={tabRefBun}>Булки</h2>
                 <ul className={`${burgerIngredientsStyles.list} pt-6 pr-4 pl-4`}>
-                    {ingList.data.map((item) => item.type === 'bun' &&
-                        <BurgerIngredientItem key={item._id} ingredient={item} /*popupOpen={popupOpen}*/
-                                              handleAddItem={handleAddItem}/>)}
+                    {ingredients.map((item) => item.type === 'bun' &&
+                        <BurgerIngredientItem key={item._id} ingredient={item}/>)}
                 </ul>
                 <h2 className="text text_type_main-medium mt-10" ref={tabRefSauce}>Соусы</h2>
                 <ul className={`${burgerIngredientsStyles.list} pt-6 pr-4 pl-4`}>
-                    {ingList.data.map((item) => item.type === 'sauce' &&
-                        <BurgerIngredientItem key={item._id} ingredient={item} /*popupOpen={popupOpen}*/
-                                              handleAddItem={handleAddItem}/>)}
+                    {ingredients.map((item) => item.type === 'sauce' &&
+                        <BurgerIngredientItem key={item._id} ingredient={item}/>)}
                 </ul>
                 <h2 className="text text_type_main-medium mt-10" ref={tabRefMain}>Начинки</h2>
                 <ul className={`${burgerIngredientsStyles.list} pt-6 pr-4 pl-4`}>
-                    {ingList.data.map((item) => item.type === 'main' &&
-                        <BurgerIngredientItem key={item._id} ingredient={item} /*popupOpen={popupOpen}*/
-                                              handleAddItem={handleAddItem}/>)}
+                    {ingredients.map((item) => item.type === 'main' &&
+                        <BurgerIngredientItem key={item._id} ingredient={item}/>)}
                 </ul>
             </div>
-            {state.visible &&
+            {visible &&
                 <Modal onClose={popupClose}>
-                    <IngredientDetails ingredient={state.currentItem}/>
+                    <IngredientDetails ingredient={currentItem}/>
                 </Modal>}
         </section>
     )

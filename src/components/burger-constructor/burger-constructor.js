@@ -1,63 +1,71 @@
-import React from 'react';
-import {Button, ConstructorElement, CurrencyIcon, DragIcon} from "@ya.praktikum/react-developer-burger-ui-components";
+import React, {useCallback} from 'react';
+import {Button, ConstructorElement, CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import burgerConstructorStyle from './burger-constructor.module.css';
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
-import {BurgerConstructorContext} from "../../services/burger-constructor-context";
-import {request} from "../../utils/request";
+import {useDrop} from "react-dnd";
+import {useDispatch, useSelector} from "react-redux";
+import {ADD_ITEM, createOrder, HIDE_ORDER_DETAILS, SORT_ITEMS} from "../../services/actions";
+import update from 'immutability-helper';
+import SortableIngredients from "../sortable-ingredients/sortable-ingredients";
 
 function BurgerConstructor() {
-    const [state, setState] = React.useState({visible: false});
-    const [order, setOrder] = React.useState({
-        data: [],
-        isLoading: false,
-        hasError: false
-    });
-    const {ingredientItems, ingredientItemDispatcher} = React.useContext(BurgerConstructorContext);
+    const dispatch = useDispatch();
+    const ingredientItems = useSelector(state => state.burgerConstructor);
+    const orderNumber = useSelector(state => state.order.order);
+    const orderDetails = useSelector(state => state.orderDetails);
 
     const totalSum = React.useMemo(() =>
             ingredientItems.reduce((acc, cur) => cur.type === "bun" ? acc + cur.price * 2 : acc + cur.price, 0),
         [ingredientItems]
     );
 
-    const handleDeleteItem = (index) => {
-        ingredientItemDispatcher({type: 'delete', payload: index})
-    }
-    const popupOpen = () => {
-        setState(prevState => (
-            {
-                ...prevState,
-                visible: true
-            }))
-    };
+    const [, dropTarget] = useDrop({
+        accept: 'items',
+        drop(item) {
+            dispatch({
+                type: ADD_ITEM,
+                payload: item
+            })
+        }
+    });
+
+
     const popupClose = () => {
-        setState(prevState => (
-            {
-                ...prevState,
-                visible: false
-            }))
+        dispatch({
+            type: HIDE_ORDER_DETAILS
+        })
+    };
+    const requestOptions = {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ingredients: ingredientItems.map(x => x._id)})
     };
 
-    const createOrder = () => {
-        const endPoint = '/orders';
-        const requestOptions = {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ingredients: ingredientItems.map(x => x._id)})
-        };
-        setOrder({...order, hasError: false, isLoading: true});
-        request(endPoint, requestOptions)
-            .then(data => setOrder({data: data, isLoading: false, hasError: false}))
-            .then(popupOpen)
-            .then(ingredientItemDispatcher({type: 'deleteAll'}))
-            .catch(error => {
-                setOrder({data: [], isLoading: false, hasError: true});
-                console.error('Произошла ошибка. Код ошибки =>', error);
-            });
-    }
+    const postOrder = () => {
+        dispatch(createOrder(requestOptions));
+    };
+
+    const moveItem = useCallback((dragIndex, hoverIndex) => {
+        const bunsIngredients = ingredientItems.filter(item => item.type === 'bun')
+        const otherIngredients = ingredientItems.filter(item => item.type !== 'bun')
+        const sortedIngredients = update(otherIngredients, {
+            $splice:
+                [
+                    [dragIndex, 1],
+                    [hoverIndex, 0, otherIngredients[dragIndex]],
+                ],
+        }, [otherIngredients])
+        const sortedItemsWithBuns = [...bunsIngredients, ...sortedIngredients]
+        dispatch({
+            type: SORT_ITEMS,
+            payload: [...sortedItemsWithBuns]
+        });
+
+    }, [ingredientItems, dispatch]);
 
     return (
-        <section className={`${burgerConstructorStyle.container} mt-15`}>
+        <section className={`${burgerConstructorStyle.container} mt-15`} ref={dropTarget}>
             <div className="mb-4 mr-4">
                 {ingredientItems.length > 0 && ingredientItems.map((item) => item.type === 'bun' ?
                     <ConstructorElement
@@ -73,18 +81,8 @@ function BurgerConstructor() {
             </div>
             <div className={`${burgerConstructorStyle.inner} pr-2`}>
                 {ingredientItems.length > 0 && ingredientItems.map((item, index) => item.type !== 'bun' ?
-                    <div
-                        key={index + item._id + 'icon'}
-                        className={burgerConstructorStyle.scrolled}>
-                        <DragIcon type="primary"/>
-                        <ConstructorElement
-                            text={item.name}
-                            price={item.price}
-                            thumbnail={item.image}
-                            extraClass={burgerConstructorStyle.element}
-                            handleClose={() => handleDeleteItem(index)}
-                        />
-                    </div>
+                    <SortableIngredients key={index} ingredient={item} index={index} moveItem={moveItem}
+                                         id={`${item._id}${index}`}/>
                     : '')
                 }
             </div>
@@ -106,12 +104,12 @@ function BurgerConstructor() {
                     <span className="text text_type_digits-medium mr-2">{totalSum}</span>
                     <CurrencyIcon type="primary"/>
                 </div>
-                <Button htmlType="button" type="primary" size="large" extraClass="ml-10" onClick={createOrder}>Оформить
+                <Button htmlType="button" type="primary" size="large" extraClass="ml-10" onClick={postOrder}>Оформить
                     заказ</Button>
             </div>
-            {state.visible &&
+            {orderDetails.visible &&
                 <Modal onClose={popupClose}>
-                    <OrderDetails orderNumber={order.data.order.number}/>
+                    <OrderDetails orderNumber={orderNumber}/>
                 </Modal>}
         </section>
     )

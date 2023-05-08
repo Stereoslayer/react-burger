@@ -2,16 +2,32 @@ import PropTypes from 'prop-types'
 import burgerIngredientItemStyle from './burger-ingredient-item.module.css'
 import {Counter, CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import ingredientType from "../../../utils/ingredient-type";
+import {useDispatch, useSelector} from "react-redux";
+import {SHOW_ING_DETAILS} from "../../../services/actions";
+import {useDrag} from "react-dnd";
+import React from "react";
 
-function BurgerIngredientItem({ingredient, handleAddItem}) {
+function BurgerIngredientItem({ingredient}) {
+    const dispatch = useDispatch();
+    const ingredientItems = useSelector(state => state.burgerConstructor);
+    const showIngDetails = () => {
+        dispatch({type: SHOW_ING_DETAILS, payload: ingredient})
+    }
+
+    const [, ref] = useDrag({
+        type: 'items',
+        item: ingredient
+    })
+
+
+    let ingredientCounter = 0;
+    ingredientItems.forEach(item => item._id === ingredient._id && (item.type === 'bun' ? (ingredientCounter += 2) : (ingredientCounter += 1)))
+
     return (
         <li className={burgerIngredientItemStyle.card}
-            onClick={() => {
-                handleAddItem(ingredient)
-            }}
-        >
+            onClick={showIngDetails} ref={ref}>
             <div className={burgerIngredientItemStyle.imagebox}>
-                <Counter count={0} size="default" extraClass={burgerIngredientItemStyle.counter}/>
+                <Counter count={ingredientCounter} size="default" extraClass={burgerIngredientItemStyle.counter}/>
                 <img src={ingredient.image} alt={ingredient.name}/>
             </div>
             <div className={`${burgerIngredientItemStyle.titlebox} mt-2 mb-2`}><p
@@ -22,7 +38,6 @@ function BurgerIngredientItem({ingredient, handleAddItem}) {
 }
 
 BurgerIngredientItem.propTypes = {
-    ingredient: ingredientType.isRequired,
-    handleAddItem: PropTypes.func.isRequired
+    ingredient: ingredientType.isRequired
 }
 export default BurgerIngredientItem;
