@@ -6,11 +6,15 @@ import BurgerIngredientItem from "./burger-ingredient-item/burger-ingredient-ite
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import Modal from "../modal/modal";
 import {useDispatch, useSelector} from "react-redux";
-import {getIngredients, HIDE_ING_DETAILS} from "../../services/actions";
+import {getIngredients} from "../../services/actions/ingredients";
+import {HIDE_ING_DETAILS} from "../../services/actions/popup";
+
+const items = (state) => state.ingredients;
+const itemsDetails = (state) => state.ingredientDetails;
 
 function BurgerIngredients() {
-    const {ingredients} = useSelector(store => store.ingredients);
-    const {currentItem, visible} = useSelector(store => store.ingredientDetails);
+    const {ingredients} = useSelector(items);
+    const {currentItem, visible} = useSelector(itemsDetails);
     const dispatch = useDispatch();
     const [current, setCurrent] = React.useState('bun')
     const tabRefBun = React.useRef(null);

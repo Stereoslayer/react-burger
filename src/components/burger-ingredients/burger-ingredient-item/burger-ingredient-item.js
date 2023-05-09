@@ -1,15 +1,16 @@
-import PropTypes from 'prop-types'
 import burgerIngredientItemStyle from './burger-ingredient-item.module.css'
 import {Counter, CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import ingredientType from "../../../utils/ingredient-type";
 import {useDispatch, useSelector} from "react-redux";
-import {SHOW_ING_DETAILS} from "../../../services/actions";
 import {useDrag} from "react-dnd";
 import React from "react";
+import {SHOW_ING_DETAILS} from "../../../services/actions/popup";
+
+const ingredients = (state) => state.burgerConstructor;
 
 function BurgerIngredientItem({ingredient}) {
     const dispatch = useDispatch();
-    const ingredientItems = useSelector(state => state.burgerConstructor);
+    const ingredientItems = useSelector(ingredients);
     const showIngDetails = () => {
         dispatch({type: SHOW_ING_DETAILS, payload: ingredient})
     }
@@ -21,7 +22,8 @@ function BurgerIngredientItem({ingredient}) {
 
 
     let ingredientCounter = 0;
-    ingredientItems.forEach(item => item._id === ingredient._id && (item.type === 'bun' ? (ingredientCounter += 2) : (ingredientCounter += 1)))
+    React.useMemo(() => ingredientItems.forEach(item => item._id === ingredient._id && (item.type === 'bun' ? (ingredientCounter += 2) : (ingredientCounter += 1))), [ingredientItems]);
+
 
     return (
         <li className={burgerIngredientItemStyle.card}

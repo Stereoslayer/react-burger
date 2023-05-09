@@ -5,15 +5,24 @@ import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
 import {useDrop} from "react-dnd";
 import {useDispatch, useSelector} from "react-redux";
-import {ADD_ITEM, createOrder, HIDE_ORDER_DETAILS, SORT_ITEMS} from "../../services/actions";
 import update from 'immutability-helper';
 import SortableIngredients from "../sortable-ingredients/sortable-ingredients";
+import {ADD_ITEM, SORT_ITEMS} from "../../services/actions/burger-constructor";
+import {HIDE_ORDER_DETAILS} from "../../services/actions/popup";
+import {createOrder} from "../../services/actions/order";
+import {v4 as uuidv4} from 'uuid';
+
+const order = (state) => state.order.order;
+const orderInfo = (state) => state.orderDetails;
+const otherIngredients = (state) => state.burgerConstructor;
+const success = (state) => state.order.success;
 
 function BurgerConstructor() {
     const dispatch = useDispatch();
-    const ingredientItems = useSelector(state => state.burgerConstructor);
-    const orderNumber = useSelector(state => state.order.order);
-    const orderDetails = useSelector(state => state.orderDetails);
+    const ingredientItems = useSelector(otherIngredients);
+    const orderNumber = useSelector(order);
+    const orderDetails = useSelector(orderInfo);
+    const orderSuccess = useSelector(success);
 
     const totalSum = React.useMemo(() =>
             ingredientItems.reduce((acc, cur) => cur.type === "bun" ? acc + cur.price * 2 : acc + cur.price, 0),
@@ -64,12 +73,15 @@ function BurgerConstructor() {
 
     }, [ingredientItems, dispatch]);
 
+    let hasBun = false;
+    React.useMemo(() => ingredientItems.forEach(item => item.type === 'bun' && (item.type === 'bun' ? (hasBun = true) : (hasBun = false))), [ingredientItems]);
+
     return (
         <section className={`${burgerConstructorStyle.container} mt-15`} ref={dropTarget}>
             <div className="mb-4 mr-4">
                 {ingredientItems.length > 0 && ingredientItems.map((item) => item.type === 'bun' ?
                     <ConstructorElement
-                        key={item._id + 'top'}
+                        key={uuidv4() + 'top'}
                         type="top"
                         isLocked={true}
                         text={item.name + ' (верх)'}
@@ -81,7 +93,7 @@ function BurgerConstructor() {
             </div>
             <div className={`${burgerConstructorStyle.inner} pr-2`}>
                 {ingredientItems.length > 0 && ingredientItems.map((item, index) => item.type !== 'bun' ?
-                    <SortableIngredients key={index} ingredient={item} index={index} moveItem={moveItem}
+                    <SortableIngredients key={uuidv4()} ingredient={item} index={index} moveItem={moveItem}
                                          id={`${item._id}${index}`}/>
                     : '')
                 }
@@ -89,7 +101,7 @@ function BurgerConstructor() {
             <div className="mt-4 mr-4">
                 {ingredientItems.length > 0 && ingredientItems.map((item) => item.type === 'bun' ?
                     <ConstructorElement
-                        key={item._id + 'bot'}
+                        key={uuidv4() + 'bot'}
                         type="bottom"
                         isLocked={true}
                         text={item.name + ' (низ)'}
@@ -104,10 +116,11 @@ function BurgerConstructor() {
                     <span className="text text_type_digits-medium mr-2">{totalSum}</span>
                     <CurrencyIcon type="primary"/>
                 </div>
-                <Button htmlType="button" type="primary" size="large" extraClass="ml-10" onClick={postOrder}>Оформить
+                <Button htmlType="button" type="primary" size="large" extraClass="ml-10" onClick={postOrder}
+                        disabled={!hasBun}>Оформить
                     заказ</Button>
             </div>
-            {orderDetails.visible &&
+            {orderDetails.visible && orderSuccess &&
                 <Modal onClose={popupClose}>
                     <OrderDetails orderNumber={orderNumber}/>
                 </Modal>}
