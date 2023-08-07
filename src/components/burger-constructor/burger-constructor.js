@@ -11,11 +11,13 @@ import {ADD_ITEM, SORT_ITEMS} from "../../services/actions/burger-constructor";
 import {HIDE_ORDER_DETAILS} from "../../services/actions/popup";
 import {createOrder} from "../../services/actions/order";
 import {v4 as uuidv4} from 'uuid';
+import {useNavigate} from "react-router-dom";
 
 const order = (state) => state.order.order;
 const orderInfo = (state) => state.orderDetails;
 const otherIngredients = (state) => state.burgerConstructor;
 const success = (state) => state.order.success;
+const userState = (state) => state.user;
 
 function BurgerConstructor() {
     const dispatch = useDispatch();
@@ -23,6 +25,8 @@ function BurgerConstructor() {
     const orderNumber = useSelector(order);
     const orderDetails = useSelector(orderInfo);
     const orderSuccess = useSelector(success);
+    const user = useSelector(userState);
+    const navigate = useNavigate();
 
     const totalSum = React.useMemo(() =>
             ingredientItems.reduce((acc, cur) => cur.type === "bun" ? acc + cur.price * 2 : acc + cur.price, 0),
@@ -39,7 +43,6 @@ function BurgerConstructor() {
         }
     });
 
-
     const popupClose = () => {
         dispatch({
             type: HIDE_ORDER_DETAILS
@@ -52,7 +55,11 @@ function BurgerConstructor() {
     };
 
     const postOrder = () => {
-        dispatch(createOrder(requestOptions));
+        if (!user.userData) {
+            navigate('/login');
+        } else {
+            dispatch(createOrder(requestOptions));
+        }
     };
 
     const moveItem = useCallback((dragIndex, hoverIndex) => {

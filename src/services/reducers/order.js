@@ -4,7 +4,7 @@ const createOrderInitialState = {
     orderRequest: false,
     orderFailed: false,
     success: false
-}
+};
 export const createOrderReducer = (state = createOrderInitialState, action) => {
     switch (action.type) {
         case POST_ORDER_REQUEST: {
