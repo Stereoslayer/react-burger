@@ -10,16 +10,22 @@ export function getIngredients() {
         dispatch({
             type: GET_ING_REQUEST
         })
-        request(endPoint)
-            .then(res =>
-                dispatch({
-                    type: GET_ING_SUCCESS,
-                    ingredients: res.data
-                }))
-            .catch(err => {
-                dispatch({
-                    type: GET_ING_ERROR
+        return new Promise((resolve, reject) => {
+            request(endPoint)
+                .then(res => {
+                    dispatch({
+                        type: GET_ING_SUCCESS,
+                        ingredients: res.data
+                    })
+                    resolve();
                 })
-            })
+                .catch(err => {
+                    dispatch({
+                        type: GET_ING_ERROR
+                    })
+                    reject();
+                })
+        })
+
     }
 }

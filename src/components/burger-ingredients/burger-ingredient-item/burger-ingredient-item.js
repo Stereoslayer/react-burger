@@ -1,18 +1,19 @@
 import burgerIngredientItemStyle from './burger-ingredient-item.module.css'
 import {Counter, CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import ingredientType from "../../../utils/ingredient-type";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {useDrag} from "react-dnd";
 import React from "react";
-import {SHOW_ING_DETAILS} from "../../../services/actions/popup";
+import {useNavigate} from "react-router-dom";
 
 const ingredients = (state) => state.burgerConstructor;
 
 function BurgerIngredientItem({ingredient}) {
-    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const ingredientItems = useSelector(ingredients);
+
     const showIngDetails = () => {
-        dispatch({type: SHOW_ING_DETAILS, payload: ingredient})
+        navigate(`ingredients/${ingredient._id}`, {state: {modal: true}});
     }
 
     const [, ref] = useDrag({

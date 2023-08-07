@@ -5,7 +5,6 @@ const userState = (state) => state.user;
 
 function ProtectedRouteElement({element}) {
     const user = useSelector(userState);
-    /*const user = localStorage.getItem('accessToken');*/
     const location = useLocation();
 
     return (

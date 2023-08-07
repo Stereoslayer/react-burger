@@ -1,10 +1,5 @@
 import React, {useEffect} from 'react';
 import Header from '../header/header';
-import appStyles from './app.module.css';
-import BurgerIngredients from "../burger-ingredients/burger-ingredients";
-import BurgerConstructor from "../burger-constructor/burger-constructor";
-import {DndProvider} from "react-dnd";
-import {HTML5Backend} from "react-dnd-html5-backend";
 import {Route, Routes} from "react-router-dom";
 import Login from "../../pages/login/login";
 import Registration from "../../pages/registration/registration";
@@ -14,29 +9,28 @@ import Profile from "../../pages/profile/profile";
 import OrderHistory from "../../pages/order-history/order-history";
 import NotFound from "../../pages/not-found/not-found";
 import ProtectedRouteElement from "../protected-route-element/protected-route-element";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {getUser} from "../../services/actions/user";
+import Constructor from "../../pages/Constructor/constructor";
+import IngredientDetails from "../ingredient-details/ingredient-details";
 
 function App() {
     const dispatch = useDispatch();
+    const accessToken = localStorage.getItem('accessToken');
     useEffect(() => {
-        if (localStorage.getItem('accessToken')) {
+        if (accessToken) {
             dispatch(getUser());
         }
-    }, []);
+    }, [accessToken]);
 
     return (
         <>
             <Header/>
             <Routes>
-                <Route path="/" element={
-                    <main className={appStyles.main}>
-                        <DndProvider backend={HTML5Backend}>
-                            <BurgerIngredients/>
-                            <BurgerConstructor/>
-                        </DndProvider>
-                    </main>
-                }/>
+                <Route path="/" element={<Constructor/>}>
+                    <Route path="/ingredients/:id" element={<IngredientDetails/>}/>
+                </Route>
+                {/*<Route path="/ingredients/:id" element={<IngredientDetails/>}/>*/}
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/registration" element={<Registration/>}/>
                 <Route path="/forgot_password" element={<ForgotPassword/>}/>

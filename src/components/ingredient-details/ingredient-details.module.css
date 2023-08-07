@@ -13,7 +13,6 @@
     display: flex;
     justify-self: flex-start;
     min-height: 64px;
-    width: 100%;
 }
 
 .list {

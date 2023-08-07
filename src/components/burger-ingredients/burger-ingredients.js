@@ -3,31 +3,17 @@ import React from 'react';
 import burgerIngredientsStyles from './burger-ingredients.module.css';
 import {Tab} from "@ya.praktikum/react-developer-burger-ui-components";
 import BurgerIngredientItem from "./burger-ingredient-item/burger-ingredient-item";
-import IngredientDetails from "../ingredient-details/ingredient-details";
-import Modal from "../modal/modal";
 import {useDispatch, useSelector} from "react-redux";
-import {getIngredients} from "../../services/actions/ingredients";
-import {HIDE_ING_DETAILS} from "../../services/actions/popup";
 
 const items = (state) => state.ingredients;
-const itemsDetails = (state) => state.ingredientDetails;
 
 function BurgerIngredients() {
     const {ingredients} = useSelector(items);
-    const {currentItem, visible} = useSelector(itemsDetails);
-    const dispatch = useDispatch();
     const [current, setCurrent] = React.useState('bun')
     const tabRefBun = React.useRef(null);
     const tabRefSauce = React.useRef(null);
     const tabRefMain = React.useRef(null);
 
-    React.useEffect(() => {
-        dispatch(getIngredients())
-    }, [])
-
-    const popupClose = () => {
-        dispatch({type: HIDE_ING_DETAILS})
-    };
     const handleScroll = (val) => {
         if (val.target.scrollTop < tabRefSauce.current.offsetTop) {
             setCurrent('bun')
@@ -87,10 +73,6 @@ function BurgerIngredients() {
                         <BurgerIngredientItem key={item._id} ingredient={item}/>)}
                 </ul>
             </div>
-            {visible &&
-                <Modal onClose={popupClose}>
-                    <IngredientDetails ingredient={currentItem}/>
-                </Modal>}
         </section>
     )
 }
