@@ -3,12 +3,13 @@ import {useSelector} from "react-redux";
 
 const userState = (state) => state.user;
 
-function ProtectedRouteElement({element}) {
-    const user = useSelector(userState);
+function ProtectedRouteElement({loggedIn, element}) {
+    const {userData} = useSelector(userState);
     const location = useLocation();
 
     return (
-        user.userData ? element : <Navigate to="/login" state={{prevLocation: location}} replace/>
+        userData && loggedIn ? <Navigate to={"/"} replace/> : !userData && !loggedIn ?
+            <Navigate to={"/login"} state={{prevLocation: location}}/> : element
     )
 }
 

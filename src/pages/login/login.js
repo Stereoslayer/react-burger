@@ -1,7 +1,7 @@
 import {Button, EmailInput, PasswordInput} from "@ya.praktikum/react-developer-burger-ui-components";
 import modalStyle from '../page.module.css';
 import {Link, useLocation, useNavigate} from "react-router-dom";
-import React, {useEffect} from "react";
+import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {login} from "../../services/actions/user";
 
@@ -13,12 +13,6 @@ function Login() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [email, setEmail] = React.useState('')
-
-    useEffect(() => {
-        if (user.userData) {
-            location.state?.prevLocation.pathname ? navigate(location.state.prevLocation.pathname) : navigate('/')
-        }
-    }, [user.userData, location])
 
     const onChangeEmail = e => {
         setEmail(e.target.value)

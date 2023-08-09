@@ -21,7 +21,7 @@ function App() {
         if (accessToken) {
             dispatch(getUser());
         }
-    }, [accessToken]);
+    }, [accessToken, dispatch]);
 
     return (
         <>
@@ -30,12 +30,11 @@ function App() {
                 <Route path="/" element={<Constructor/>}>
                     <Route path="/ingredients/:id" element={<IngredientDetails/>}/>
                 </Route>
-                {/*<Route path="/ingredients/:id" element={<IngredientDetails/>}/>*/}
-                <Route path="/login" element={<Login/>}/>
-                <Route path="/registration" element={<Registration/>}/>
-                <Route path="/forgot_password" element={<ForgotPassword/>}/>
-                <Route path="/reset_password" element={<ResetPassword/>}/>
-                <Route path="/profile" element={<ProtectedRouteElement element={<Profile/>}/>}>
+                <Route path="/login" element={<ProtectedRouteElement element={<Login/>} loggedIn/>}/>
+                <Route path="/registration" element={<ProtectedRouteElement element={<Registration/>} loggedIn/>}/>
+                <Route path="/forgot_password" element={<ProtectedRouteElement element={<ForgotPassword/>} loggedIn/>}/>
+                <Route path="/reset_password" element={<ResetPassword/>} loggedIn/>
+                <Route path="/profile" element={<ProtectedRouteElement element={<Profile/>} loggedIn={false}/>}>
                     <Route path="/profile/order_history" element={<OrderHistory/>}/>
                 </Route>
                 <Route path="*" element={<NotFound/>}/>

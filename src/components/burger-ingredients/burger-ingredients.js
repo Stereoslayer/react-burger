@@ -3,7 +3,7 @@ import React from 'react';
 import burgerIngredientsStyles from './burger-ingredients.module.css';
 import {Tab} from "@ya.praktikum/react-developer-burger-ui-components";
 import BurgerIngredientItem from "./burger-ingredient-item/burger-ingredient-item";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 
 const items = (state) => state.ingredients;
 

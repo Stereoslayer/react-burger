@@ -1,16 +1,13 @@
 import modalStyle from "../page.module.css";
 import {Button, EmailInput, Input, PasswordInput} from "@ya.praktikum/react-developer-burger-ui-components";
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {registration} from "../../services/actions/user";
 
-const userState = (state) => state.user;
 const success = (state) => state.user.success;
 
 function Registration() {
-    const user = useSelector(userState);
-    const location = useLocation();
     const navigate = useNavigate();
     const registrationSuccess = useSelector(success);
     const dispatch = useDispatch();
@@ -25,12 +22,6 @@ function Registration() {
     const onPasswordChange = e => {
         setUserPassword(e.target.value)
     };
-
-    useEffect(() => {
-        if (user.userData) {
-            location.state?.prevLocation.pathname ? navigate(location.state.prevLocation.pathname) : navigate('/')
-        }
-    }, [user.userData, location])
 
     const requestOptions = {
         method: 'POST',
@@ -58,18 +49,18 @@ function Registration() {
                 Регистрация
             </p>
             <Input
-                type={'text'}
-                placeholder={'Имя'}
+                type='text'
+                placeholder='Имя'
                 onChange={e => setUserName(e.target.value)}
                 value={userName}
-                name={'name'}
+                name='name'
                 error={false}
-                errorText={'Ошибка'}
-                size={'default'}
+                errorText='Ошибка'
+                size='default'
                 extraClass="mb-6"
             />
             <EmailInput
-                name={'email'}
+                name='email'
                 isIcon={false}
                 onChange={onEmailChange}
                 value={userEmail}
@@ -78,7 +69,7 @@ function Registration() {
             <PasswordInput
                 onChange={onPasswordChange}
                 value={userPassword}
-                name={'password'}
+                name='password'
                 extraClass="mb-6"
             />
             <Button

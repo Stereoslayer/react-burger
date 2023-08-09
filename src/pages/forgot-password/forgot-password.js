@@ -1,17 +1,13 @@
-import React, {useEffect} from "react";
+import React from "react";
 import modalStyle from "../page.module.css";
 import {Button, EmailInput} from "@ya.praktikum/react-developer-burger-ui-components";
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {resetPassword} from "../../services/actions/user";
-import {useDispatch, useSelector} from "react-redux";
-
-const userState = (state) => state.user;
+import {useDispatch} from "react-redux";
 
 function ForgotPassword() {
     const dispatch = useDispatch();
     const [email, setEmail] = React.useState('')
-    const user = useSelector(userState);
-    const location = useLocation();
     const onChange = e => {
         setEmail(e.target.value)
     }
@@ -22,12 +18,6 @@ function ForgotPassword() {
                 navigate('/reset_password')
             });
     }
-
-    useEffect(() => {
-        if (user.userData) {
-            location.state?.prevLocation.pathname ? navigate(location.state.prevLocation.pathname) : navigate('/')
-        }
-    }, [user.userData, location])
 
     return (
         <main className={modalStyle.main}>

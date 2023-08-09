@@ -1,4 +1,6 @@
 import {request} from "../../utils/request";
+import {baseUrl} from "../../utils/base-url";
+import {checkResponse} from "../../utils/checkResponse";
 
 
 export const REGISTRATION_REQUEST = 'REGISTRATION_REQUEST';
@@ -125,16 +127,32 @@ function refreshToken(token) {
             token
         })
     }
-    request(endPoint, options).then((data) => {
-            localStorage.setItem('accessToken', data.accessToken);
-            localStorage.setItem('refreshToken', data.refreshToken);
-        }
-    )
-        .catch(err => {
-            clearTokens();
-        })
+    return new Promise((resolve, reject) => {
+        request(endPoint, options).then((data) => {
+                localStorage.setItem('accessToken', data.accessToken);
+                localStorage.setItem('refreshToken', data.refreshToken);
+                resolve();
+            }
+        )
+            .catch(err => {
+                clearTokens();
+                reject();
+            })
+    })
+
 }
 
+function fetchWithRefresh(endPoint, options) {
+    const url = baseUrl + endPoint;
+    return new Promise((resolve, reject) => {
+        refreshToken(localStorage.getItem('refreshToken')).then(() => {
+            options.headers = Object.assign(options.headers || {}, {'Authorization': localStorage.getItem('accessToken')})
+            resolve(fetch(url, options).then(checkResponse))
+        })
+    })
+}
+
+//Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0Y2ZjZjg2ODJlMjc3MDAxYmZhNzQyMyIsImlhdCI6MTY5MTUxODA1MywiZXhwIjoxNjkxNTE5MjUzfQ.ArZS0zLRPzOb6zxgZcMD_4puvAz_UuXVP9u3Y2Vr5iI
 export function getUser() {
     return function (dispatch) {
         const endPoint = '/auth/user';
@@ -152,22 +170,30 @@ export function getUser() {
                             type: GETUSER_SUCCESS,
                             data: data
                         })
-                        setupRefreshInterval();
                         resolve();
                     }
                 )
                 .catch(err => {
-                    dispatch({
-                        type: GETUSER_ERROR,
-                        data: err
+                    fetchWithRefresh(endPoint, options).then(data => {
+                        dispatch({
+                            type: GETUSER_SUCCESS,
+                            data: data
+                        })
+                        resolve();
                     })
-                    clearTokens();
-                    reject();
+                        .catch(err => {
+                            dispatch({
+                                type: GETUSER_ERROR,
+                                data: err
+                            })
+                            reject();
+                        })
                 })
         })
 
     }
 }
+
 
 export function updateUser(user) {
     return function (dispatch) {
