@@ -1,0 +1,12 @@
+.fieldset {
+    padding: 0;
+    border: none;
+}
+
+.buttons {
+    text-align: right;
+}
+
+.cancel {
+    color: #4C4CFF;
+}

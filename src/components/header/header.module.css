@@ -1,0 +1,46 @@
+
+.header {
+    background: #1C1C21;
+}
+
+.link {
+    background: transparent;
+    border: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none;
+    color: #8585AD;
+}
+
+.link:hover {
+    opacity: 0.6;
+    transition: all 1s ease;
+}
+
+.active {
+    color: #F2F2F3;
+}
+
+.list {
+    width: 100%;
+    align-items: center;
+    display: grid;
+    list-style: none;
+    grid-template-columns: max-content max-content 1fr max-content;
+    padding: 0;
+    margin: 0;
+    justify-items: center;
+    max-width: 1280px;
+}
+
+.nav {
+    display: flex;
+    justify-content: center;
+}
+
+.logo {
+    justify-self: flex-start;
+    margin-left: 122px;
+}
