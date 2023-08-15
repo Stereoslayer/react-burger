@@ -1,13 +1,14 @@
 import {useDispatch, useSelector} from "react-redux";
 import {CurrencyIcon, FormattedDate} from "@ya.praktikum/react-developer-burger-ui-components";
-import {useParams} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 import {v4 as uuidv4} from 'uuid';
 import {useEffect, useState} from "react";
-import {WS_CONNECTION_CLOSED, WS_CONNECTION_START_ORDERS} from "../../services/actions/wsActions";
+import {WS_CONNECTION_CLOSED, WS_CONNECTION_START} from "../../services/actions/wsActions";
 import orderDetailsStyle from './order-details.module.css';
 
 function OrderDetails() {
     const dispatch = useDispatch();
+    const location = useLocation();
     const {ingredients} = useSelector((state) => state.ingredients);
     const {id} = useParams();
     const {orders} = useSelector((state) => state.ws.data);
@@ -15,12 +16,12 @@ function OrderDetails() {
 
     useEffect(
         () => {
-            dispatch({type: WS_CONNECTION_START_ORDERS});
+            dispatch({type: WS_CONNECTION_START});
 
             return () => {
                 dispatch({type: WS_CONNECTION_CLOSED});
             }
-        }, []);
+        }, [dispatch]);
 
     const [formattedIngredients, setFormattedIngredients] = useState([]);
 
@@ -60,7 +61,7 @@ function OrderDetails() {
 
     return order ? (
         <div className={orderDetailsStyle.main}>
-            <h2 className={'text text_type_digits-default mb-5'}>{`#${order.number}`}</h2>
+            <h2 className={`${!location.state?.modal ? orderDetailsStyle.title_number : ''} text text_type_digits-default mb-5`}>{`#${order.number}`}</h2>
             <div className={'mb-15'}>
                 <h1 className={`${orderDetailsStyle.title} text text_type_main-medium mb-2`}>{order.name}</h1>
                 <span

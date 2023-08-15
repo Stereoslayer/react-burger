@@ -1,7 +1,7 @@
 import {request} from "../../utils/request";
 import {baseUrl} from "../../utils/base-url";
 import {checkResponse} from "../../utils/checkResponse";
-import {WS_CONNECTION_START_ORDERS} from "./wsActions";
+import {WS_CONNECTION_START} from "./wsActions";
 
 
 export const REGISTRATION_REQUEST = 'REGISTRATION_REQUEST';
@@ -180,7 +180,7 @@ export function getUser() {
                             type: GETUSER_SUCCESS,
                             data: data
                         });
-                        dispatch({type: WS_CONNECTION_START_ORDERS});
+                        dispatch({type: WS_CONNECTION_START});
                         resolve();
                     })
                         .catch(err => {

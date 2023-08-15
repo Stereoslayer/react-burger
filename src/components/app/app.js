@@ -52,7 +52,9 @@ function App() {
                         <Route path="/profile/orders/:id" element={<OrderDetails/>}/>
                     </Route>
                 </Route>
-                <Route path="/feed" element={<Feed/>}/>
+                <Route path="/feed" element={<Feed/>}>
+                    <Route path="/feed/:id" element={<OrderDetails/>}/>
+                </Route>
                 <Route path="*" element={<NotFound/>}/>
             </Routes>
         </>) : ''

@@ -3,6 +3,10 @@
     flex-direction: column;
 }
 
+.title_number {
+    align-self: center;
+}
+
 .status_done {
     color: #0CC;
 }

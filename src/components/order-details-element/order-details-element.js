@@ -58,7 +58,9 @@ function OrderDetailsElement({data}) {
     }
 
     const showOrderDetails = () => {
-        navigate(`/profile/orders/${data._id}`, {state: {modal: true}});
+        location.pathname === '/profile/orders' ?
+            navigate(`/profile/orders/${data._id}`, {state: {modal: true}}) :
+            navigate(`/feed/${data._id}`, {state: {modal: true}})
     }
 
     return (

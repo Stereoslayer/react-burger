@@ -3,9 +3,9 @@ import orderHistoryStyle from "./order-history.module.css";
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {v4 as uuidv4} from 'uuid';
-import {WS_CONNECTION_CLOSED, WS_CONNECTION_START_ORDERS} from "../../services/actions/wsActions";
 import Modal from "../../components/modal/modal";
 import {Outlet, useLocation, useNavigate} from "react-router-dom";
+import {WS_CONNECTION_CLOSED_USER, WS_CONNECTION_START_USER} from "../../services/actions/wsActionsUser";
 
 function OrderHistory() {
     const navigate = useNavigate();
@@ -14,16 +14,16 @@ function OrderHistory() {
         navigate('/profile/orders', {state: {modal: false}});
     };
     const dispatch = useDispatch();
-    const {orders} = useSelector((state) => state.ws.data);
+    const {orders} = useSelector((state) => state.wsUser.data);
 
     useEffect(
         () => {
-            dispatch({type: WS_CONNECTION_START_ORDERS});
+            dispatch({type: WS_CONNECTION_START_USER});
 
             return () => {
-                dispatch({type: WS_CONNECTION_CLOSED});
+                dispatch({type: WS_CONNECTION_CLOSED_USER});
             }
-        }, [location]);
+        }, [dispatch]);
 
     return (
         <>

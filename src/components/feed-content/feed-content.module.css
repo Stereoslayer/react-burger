@@ -1,0 +1,83 @@
+.title {
+    align-self: flex-start;
+}
+
+.two_boxes {
+    display: flex;
+    flex-direction: row;
+    column-gap: 56px;
+}
+
+.list_item {
+    list-style: none;
+    margin-right: 8px;
+}
+
+.list {
+    max-height: 1040px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    row-gap: 24px;
+    width: 600px;
+    padding: 0;
+}
+
+.list::-webkit-scrollbar {
+    scroll-padding-left: 8px;
+    width: 8px;
+    height: 868px;
+    background-color: #2F2F37;
+}
+
+.list::-webkit-scrollbar-thumb {
+    height: 696px;
+    background-color: #8585AD;
+}
+
+.digits {
+    text-shadow: 0 4px 32px rgba(51, 51, 255, 0.50), 0 0 8px rgba(51, 51, 255, 0.25), 0 0 16px rgba(51, 51, 255, 0.25);
+}
+
+.digit_list_item {
+    list-style: none;
+    flex-shrink: 1;
+}
+
+.digit_list_item_done {
+    color: #0CC;
+}
+
+.digits_box {
+    display: flex;
+    flex-direction: column;
+}
+
+.status_box {
+    display: flex;
+    flex-direction: row;
+    column-gap: 16px;
+}
+
+.total_box {
+    display: flex;
+    flex-direction: column;
+    row-gap: 60px;
+}
+
+.done_box {
+    min-width: 400px;
+}
+
+.status_list {
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
+    column-gap: 8px;
+    margin: 0;
+    padding: 0;
+    max-height: 315px;
+    flex-wrap: wrap;
+    width: max-content;
+}
