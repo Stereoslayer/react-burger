@@ -23,7 +23,7 @@ function Header() {
                         )}
                     </NavLink></li>
                     <li><NavLink
-                        to="/order_feed"
+                        to="/feed"
                         className={({isActive}) => {
                             const linkClasses = [`${headerStyles.link} text text_type_main-default pt-4 pb-4 pl-5 pr-5`];
                             if (isActive) linkClasses.push(headerStyles.active);

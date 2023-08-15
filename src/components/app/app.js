@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import Header from '../header/header';
 import {Route, Routes} from "react-router-dom";
 import Login from "../../pages/login/login";
@@ -13,18 +13,30 @@ import {useDispatch} from "react-redux";
 import {getUser} from "../../services/actions/user";
 import Constructor from "../../pages/Constructor/constructor";
 import IngredientDetails from "../ingredient-details/ingredient-details";
+import ProfileForm from "../profile-form/profile-form";
+import Feed from "../../pages/feed/feed";
+import {getIngredients} from "../../services/actions/ingredients";
+import OrderDetails from "../order-details/order-details";
 
 function App() {
     const dispatch = useDispatch();
     const accessToken = localStorage.getItem('accessToken');
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
         if (accessToken) {
-            dispatch(getUser());
+            setLoading(true);
+            dispatch(getUser()).finally(() => setLoading(false));
+        } else {
+            setLoading(false);
         }
-    }, [accessToken, dispatch]);
+    }, [accessToken]);
+
+    useEffect(() => {
+        dispatch(getIngredients())
+    }, [])
 
     return (
-        <>
+        !loading ? (<>
             <Header/>
             <Routes>
                 <Route path="/" element={<Constructor/>}>
@@ -35,11 +47,15 @@ function App() {
                 <Route path="/forgot_password" element={<ProtectedRouteElement element={<ForgotPassword/>} loggedIn/>}/>
                 <Route path="/reset_password" element={<ResetPassword/>} loggedIn/>
                 <Route path="/profile" element={<ProtectedRouteElement element={<Profile/>} loggedIn={false}/>}>
-                    <Route path="/profile/order_history" element={<OrderHistory/>}/>
+                    <Route path="/profile/" element={<ProfileForm/>}/>
+                    <Route path="/profile/orders" element={<OrderHistory/>}>
+                        <Route path="/profile/orders/:id" element={<OrderDetails/>}/>
+                    </Route>
                 </Route>
+                <Route path="/feed" element={<Feed/>}/>
                 <Route path="*" element={<NotFound/>}/>
             </Routes>
-        </>
+        </>) : ''
     )
 }
 

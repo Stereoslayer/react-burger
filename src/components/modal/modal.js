@@ -25,7 +25,7 @@ function Modal({onClose, children}) {
     return createPortal((
         <>
             <ModalOverlay onClose={onClose}/>
-            <div className={`${modalStyle.box} pr-10 pl-10 pt-10 pb-15`}>
+            <div className={`${modalStyle.box} pr-10 pl-10 pt-10 pb-10`}>
                 <button onClick={onClose} className={modalStyle.button}><CloseIcon type="primary"/></button>
                 {children}
             </div>

@@ -7,7 +7,7 @@
     right: 40px;
     top: 60px;
     cursor: pointer;
-    position: fixed;
+    position: absolute;
 }
 
 .box {
