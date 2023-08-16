@@ -1,7 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
 import {CurrencyIcon, FormattedDate} from "@ya.praktikum/react-developer-burger-ui-components";
 import {useLocation, useParams} from "react-router-dom";
-import {v4 as uuidv4} from 'uuid';
 import {useEffect, useState} from "react";
 import {WS_CONNECTION_CLOSED, WS_CONNECTION_START} from "../../services/actions/wsActions";
 import orderDetailsStyle from './order-details.module.css';
@@ -71,7 +70,7 @@ function OrderDetails() {
             <ul className={`${orderDetailsStyle.list}`}>
                 {formattedIngredients?.map((item) => {
                     return (
-                        <li className={orderDetailsStyle.list_item} key={uuidv4()}>
+                        <li className={orderDetailsStyle.list_item} key={item._id}>
                             <div className={orderDetailsStyle.image_name_box}>
                                 <div className={orderDetailsStyle.list_image}>
                                     <img className={orderDetailsStyle.image} src={item.image} alt={item.name}/>

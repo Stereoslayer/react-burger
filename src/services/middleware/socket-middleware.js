@@ -43,8 +43,6 @@ export const socketMiddleware = (wsUrl, wsActions, user) => {
                     socket.close();
                     wsCheckOpen = false;
                 }
-
-                console.log(wsCheckOpen)
             }
             next(action);
         };

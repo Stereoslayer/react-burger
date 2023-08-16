@@ -2,7 +2,6 @@ import OrderDetailsElement from "../../components/order-details-element/order-de
 import orderHistoryStyle from "./order-history.module.css";
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {v4 as uuidv4} from 'uuid';
 import Modal from "../../components/modal/modal";
 import {Outlet, useLocation, useNavigate} from "react-router-dom";
 import {WS_CONNECTION_CLOSED_USER, WS_CONNECTION_START_USER} from "../../services/actions/wsActionsUser";
@@ -31,7 +30,7 @@ function OrderHistory() {
                 <div className={orderHistoryStyle.main}>
                     <ul className={orderHistoryStyle.list}>
                         {orders?.map((item) => (
-                            <li className={orderHistoryStyle.list_item} key={uuidv4()}><OrderDetailsElement
+                            <li className={orderHistoryStyle.list_item} key={item._id}><OrderDetailsElement
                                 data={item}/></li>)).reverse()}
                     </ul>
                 </div> :
@@ -40,7 +39,7 @@ function OrderHistory() {
                         <div className={orderHistoryStyle.main}>
                             <ul className={orderHistoryStyle.list}>
                                 {orders?.map((item) => (
-                                    <li className={orderHistoryStyle.list_item} key={uuidv4()}><OrderDetailsElement
+                                    <li className={orderHistoryStyle.list_item} key={item._id}><OrderDetailsElement
                                         data={item}/></li>)).reverse()}
                             </ul>
                         </div>
