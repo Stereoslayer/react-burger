@@ -2,13 +2,11 @@ import {Button, EmailInput, PasswordInput} from "@ya.praktikum/react-developer-b
 import modalStyle from '../page.module.css';
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import React from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {login} from "../../services/actions/user";
 
-const userState = (state) => state.user;
 
 function Login() {
-    const user = useSelector(userState);
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();

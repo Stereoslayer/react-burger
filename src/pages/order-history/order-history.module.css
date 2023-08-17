@@ -1,0 +1,30 @@
+.main {
+    position: absolute;
+    width: 875px;
+    left: 36%;
+}
+
+.list {
+    max-height: 1040px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    row-gap: 24px;
+    width: 100%;
+}
+
+.list_item {
+    list-style: none;
+}
+
+.list::-webkit-scrollbar {
+    width: 8px;
+    height: 868px;
+    background-color: #2F2F37;
+}
+
+.list::-webkit-scrollbar-thumb {
+    height: 696px;
+    background-color: #8585AD;
+}

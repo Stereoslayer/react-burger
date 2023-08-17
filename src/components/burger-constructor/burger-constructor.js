@@ -2,14 +2,14 @@ import React, {useCallback} from 'react';
 import {Button, ConstructorElement, CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import burgerConstructorStyle from './burger-constructor.module.css';
 import Modal from "../modal/modal";
-import OrderDetails from "../order-details/order-details";
+import OrderAccepted from "../order-accepted/order-accepted";
 import {useDrop} from "react-dnd";
 import {useDispatch, useSelector} from "react-redux";
 import update from 'immutability-helper';
 import SortableIngredients from "../sortable-ingredients/sortable-ingredients";
 import {ADD_ITEM, SORT_ITEMS} from "../../services/actions/burger-constructor";
 import {HIDE_ORDER_DETAILS} from "../../services/actions/popup";
-import {createOrder} from "../../services/actions/order";
+import {createOrder, POST_ORDER_CLEAR_STORE} from "../../services/actions/order";
 import {v4 as uuidv4} from 'uuid';
 import {useNavigate} from "react-router-dom";
 
@@ -46,18 +46,29 @@ function BurgerConstructor() {
     const popupClose = () => {
         dispatch({
             type: HIDE_ORDER_DETAILS
-        })
+        });
+        dispatch({
+            type: POST_ORDER_CLEAR_STORE
+        });
     };
-    const requestOptions = {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ingredients: ingredientItems.map(x => x._id)})
-    };
+
+    const prepareIngredients = () => {
+        const bun = ingredientItems.find(item => item.type === 'bun');
+        return [...ingredientItems.map(x => x._id), bun._id]
+    }
 
     const postOrder = () => {
         if (!user.userData) {
             navigate('/login');
         } else {
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('accessToken')
+                },
+                body: JSON.stringify({ingredients: prepareIngredients()})
+            };
             dispatch(createOrder(requestOptions));
         }
     };
@@ -129,7 +140,7 @@ function BurgerConstructor() {
             </div>
             {orderDetails.visible && orderSuccess &&
                 <Modal onClose={popupClose}>
-                    <OrderDetails orderNumber={orderNumber}/>
+                    <OrderAccepted orderNumber={orderNumber}/>
                 </Modal>}
         </section>
     )

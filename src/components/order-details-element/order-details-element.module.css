@@ -1,0 +1,129 @@
+.box {
+    background: #1C1C21;
+    border-radius: 40px;
+    display: flex;
+    flex-direction: column;
+    max-width: 808px;
+    cursor: pointer;
+}
+
+.title_box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.image {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #000000 50% / cover no-repeat;
+}
+
+.ing_first {
+    z-index: 1;
+}
+
+.ing_second {
+    right: 5%;
+    z-index: -1;
+}
+
+.ing_third {
+    right: 10%;
+    z-index: -2;
+}
+
+.ing_fourth {
+    right: 15%;
+    z-index: -3;
+}
+
+.ing_fifth {
+    right: 20%;
+    z-index: -4;
+}
+
+.ing_sixth {
+    right: 25%;
+    z-index: -5;
+}
+
+.image_box {
+    display: flex;
+    flex-direction: row;
+    z-index: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.last_image_box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 17%;
+}
+
+.counter {
+    position: absolute;
+}
+
+.dim {
+    position: absolute;
+    background: #1C1C21;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    opacity: 0.6;
+}
+
+.ing_price_box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.price_box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 8px;
+}
+
+.list_item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    position: relative;
+    background: linear-gradient(to left, #743ad5, #d53a9d);
+}
+
+.last_image_list_item {
+    right: 25%;
+    z-index: -5;
+}
+
+.name_status_box {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    row-gap: 8px;
+}
+
+.status_done {
+    color: #0CC;
+}

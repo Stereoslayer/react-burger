@@ -5,6 +5,7 @@ import {DELETE_ALL_ITEMS} from "./burger-constructor";
 export const POST_ORDER_REQUEST = 'POST_ORDER_REQUEST';
 export const POST_ORDER_ERROR = 'POST_ORDER_ERROR';
 export const POST_ORDER_SUCCESS = 'POST_ORDER_SUCCESS';
+export const POST_ORDER_CLEAR_STORE = 'POST_ORDER_CLEAR_STORE';
 
 export function createOrder(requestOptions) {
     return function (dispatch) {

@@ -1,4 +1,4 @@
-import {POST_ORDER_ERROR, POST_ORDER_REQUEST, POST_ORDER_SUCCESS} from "../actions/order";
+import {POST_ORDER_CLEAR_STORE, POST_ORDER_ERROR, POST_ORDER_REQUEST, POST_ORDER_SUCCESS} from "../actions/order";
 
 const createOrderInitialState = {
     orderRequest: false,
@@ -29,6 +29,15 @@ export const createOrderReducer = (state = createOrderInitialState, action) => {
                 orderRequest: false,
                 order: ''
             };
+        }
+        case POST_ORDER_CLEAR_STORE: {
+            return {
+                ...state,
+                order: '',
+                orderRequest: false,
+                orderFailed: false,
+                success: false
+            }
         }
         default: {
             return state

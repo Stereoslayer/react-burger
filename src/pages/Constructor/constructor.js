@@ -4,18 +4,12 @@ import {HTML5Backend} from "react-dnd-html5-backend";
 import BurgerIngredients from "../../components/burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../../components/burger-constructor/burger-constructor";
 import React from "react";
-import {getIngredients} from "../../services/actions/ingredients";
-import {useDispatch} from "react-redux";
 import {Outlet, useLocation, useNavigate} from "react-router-dom";
 import Modal from "../../components/modal/modal";
 
 function Constructor() {
-    const dispatch = useDispatch();
     const location = useLocation();
     const navigate = useNavigate();
-    React.useEffect(() => {
-        dispatch(getIngredients())
-    }, [])
     const popupClose = () => {
         navigate('/');
     };
