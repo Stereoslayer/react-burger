@@ -46,19 +46,26 @@ export function registration(requestOptions) {
         dispatch({
             type: REGISTRATION_REQUEST
         })
-        request(endPoint, requestOptions)
-            .then(data =>
-                dispatch({
-                    type: REGISTRATION_SUCCESS,
-                    data: data
-                }))
-            .catch(err => {
-                debugger;
-                dispatch({
-                    type: REGISTRATION_ERROR,
-                    data: err
+        return new Promise((resolve, reject) => {
+            request(endPoint, requestOptions)
+                .then(data => {
+                    dispatch({
+                        type: REGISTRATION_SUCCESS,
+                        data: data
+                    })
+                    localStorage.setItem('accessToken', data.accessToken);
+                    localStorage.setItem('refreshToken', data.refreshToken);
+                    resolve();
                 })
-            })
+                .catch(err => {
+                    debugger;
+                    dispatch({
+                        type: REGISTRATION_ERROR,
+                        data: err
+                    })
+                    reject();
+                })
+        })
     }
 }
 
