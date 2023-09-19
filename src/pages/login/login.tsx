@@ -1,7 +1,7 @@
 import {Button, EmailInput, PasswordInput} from "@ya.praktikum/react-developer-burger-ui-components";
 import modalStyle from '../page.module.css';
 import {Link, useLocation, useNavigate} from "react-router-dom";
-import React, {ChangeEvent} from "react";
+import React, {ChangeEvent, FormEvent} from "react";
 import {useDispatch} from "../../utils/types";
 import {login} from "../../services/actions/user";
 
@@ -29,7 +29,8 @@ function Login() {
         })
     };
 
-    const postLogin = () => {
+    const postLogin = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
         dispatch(login(requestOptions))
             .then(() => {
                 if (location.state?.prevLocation) {
@@ -43,22 +44,24 @@ function Login() {
             <p className="text text_type_main-medium mb-6">
                 Вход
             </p>
-            <EmailInput
-                name={'email'}
-                isIcon={false}
-                onChange={onChangeEmail}
-                value={email}
-                extraClass="mb-6"
-            />
-            <PasswordInput
-                onChange={onChangePassword}
-                value={password}
-                name={'password'}
-                extraClass="mb-6"
-            />
-            <Button htmlType="button" type="primary" size="medium" extraClass="mb-20" onClick={postLogin}>
-                Войти
-            </Button>
+            <form onSubmit={(e) => postLogin(e)} className={modalStyle.form}>
+                <EmailInput
+                    name={'email'}
+                    isIcon={false}
+                    onChange={onChangeEmail}
+                    value={email}
+                    extraClass="mb-6"
+                />
+                <PasswordInput
+                    onChange={onChangePassword}
+                    value={password}
+                    name={'password'}
+                    extraClass="mb-6"
+                />
+                <Button htmlType="submit" type="primary" size="medium" extraClass="mb-20">
+                    Войти
+                </Button>
+            </form>
             <p className="text text_type_main-default text_color_inactive mb-4">
                 Вы — новый пользователь? <Link to='/registration'
                                                className={`${modalStyle.link} text text_type_main-default`}>

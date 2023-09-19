@@ -3,12 +3,10 @@ import React from 'react';
 import burgerIngredientsStyles from './burger-ingredients.module.css';
 import {Tab} from "@ya.praktikum/react-developer-burger-ui-components";
 import BurgerIngredientItem from "./burger-ingredient-item/burger-ingredient-item";
-import {RootState, useSelector} from "../../utils/types";
-
-const items = (state: RootState) => state.ingredients;
+import {useSelector} from "../../utils/types";
 
 function BurgerIngredients() {
-    const {ingredients} = useSelector(items);
+    const {ingredients} = useSelector((state) => state.ingredients);
     const [current, setCurrent] = React.useState<string>('bun')
     const tabRefBun = React.useRef<HTMLInputElement>(null);
     const tabRefSauce = React.useRef<HTMLInputElement>(null);

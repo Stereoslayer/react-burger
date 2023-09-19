@@ -9,19 +9,17 @@ import {rootReducer} from "./services/reducers";
 import {BrowserRouter} from "react-router-dom";
 import {socketMiddleware} from "./services/middleware/socket-middleware";
 import {wsActions} from "./services/actions/wsActions";
-import {wsActionsUser} from "./services/actions/wsActionsUser";
 import {composeWithDevTools} from 'redux-devtools-extension';
 
-const baseWsUrl: string = 'wss://norma.nomoreparties.space/orders';
 
-const enhancer = composeWithDevTools(applyMiddleware(thunk, socketMiddleware(baseWsUrl, wsActions, false), socketMiddleware(baseWsUrl, wsActionsUser, true)));
+const enhancer = composeWithDevTools(applyMiddleware(thunk, socketMiddleware(wsActions)));
 
 
 export const store = createStore(rootReducer, enhancer);
 
 const container = document.getElementById('root');
-// @ts-ignore
-const root = createRoot(container);
+
+const root = createRoot(container!);
 root.render(
     <Provider store={store}>
         <BrowserRouter>

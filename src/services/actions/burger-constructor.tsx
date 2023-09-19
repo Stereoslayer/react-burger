@@ -1,4 +1,4 @@
-import {TIngredientType} from "../../utils/types";
+import {TIngredientType, TIngredientWithUniqueIdType} from "../../utils/types";
 
 export const ADD_ITEM: 'ADD_ITEM' = 'ADD_ITEM';
 export const DELETE_ITEM: 'DELETE_ITEM' = 'DELETE_ITEM';
@@ -7,7 +7,7 @@ export const SORT_ITEMS: 'SORT_ITEMS' = 'SORT_ITEMS';
 
 export interface IAddItemAction {
     readonly type: typeof ADD_ITEM;
-    payload: TIngredientType;
+    payload: TIngredientWithUniqueIdType;
 }
 
 export interface IDeleteItemAction {
@@ -21,7 +21,7 @@ export interface IDeleteAllItemsAction {
 
 export interface ISortItemsAction {
     readonly type: typeof SORT_ITEMS;
-    payload: Array<TIngredientType>;
+    payload: Array<TIngredientWithUniqueIdType>;
 }
 
 export type TItemActions = IAddItemAction | IDeleteItemAction | IDeleteAllItemsAction | ISortItemsAction;

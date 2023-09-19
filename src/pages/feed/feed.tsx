@@ -13,12 +13,12 @@ function Feed() {
 
     useEffect(
         () => {
-            dispatch({type: WS_CONNECTION_START});
+            dispatch({type: WS_CONNECTION_START, payload: '/all'});
 
             return () => {
                 dispatch({type: WS_CONNECTION_CLOSED});
             }
-        }, [location]);
+        }, [dispatch]);
 
     const popupClose = () => {
         navigate('/feed', {state: {modal: false}});

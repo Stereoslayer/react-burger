@@ -1,15 +1,12 @@
 import profileFormStyle from "./profile-form.module.css";
 import {Button, EmailInput, Input, PasswordInput} from "@ya.praktikum/react-developer-burger-ui-components";
 import React, {ChangeEvent, useEffect} from "react";
-import {RootState, TUserFormType, useDispatch, useSelector} from '../../utils/types';
+import {TUserFormType, useDispatch, useSelector} from '../../utils/types';
 import {updateUser} from "../../services/actions/user";
 
-const userName = (state: RootState) => state.user.userData.name;
-const userEmail = (state: RootState) => state.user.userData.email;
-
 function ProfileForm() {
-    const currentName = useSelector(userName);
-    const currentEmail = useSelector(userEmail);
+    const currentName = useSelector((state) => state.user.userData.name);
+    const currentEmail = useSelector((state) => state.user.userData.email);
     const [name, setName] = React.useState<string>('');
     const [email, setEmail] = React.useState<string>('');
     const [password, setPassword] = React.useState<string>('');
@@ -35,8 +32,7 @@ function ProfileForm() {
             user.password = password;
         }
         dispatch(updateUser(user))
-            // @ts-ignore
-            .then(setEdited(false));
+            .then(setEdited(false)!);
     }
 
     return (
@@ -66,8 +62,7 @@ function ProfileForm() {
                 value={email}
                 extraClass="mb-6"
                 placeholder={'Логин'}
-                // @ts-ignore
-                icon={'EditIcon'}
+                isIcon={true}
             />
             <PasswordInput
                 onChange={(e) => {

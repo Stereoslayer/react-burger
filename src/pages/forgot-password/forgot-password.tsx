@@ -1,4 +1,4 @@
-import React, {ChangeEvent} from "react";
+import React, {ChangeEvent, FormEvent} from "react";
 import modalStyle from "../page.module.css";
 import {Button, EmailInput} from "@ya.praktikum/react-developer-burger-ui-components";
 import {Link, useNavigate} from "react-router-dom";
@@ -12,7 +12,8 @@ function ForgotPassword() {
         setEmail(e.target.value)
     }
     const navigate = useNavigate();
-    const onClick = () => {
+    const postResetPassword = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
         dispatch(resetPassword(email))
             .then(() => {
                 navigate('/reset_password')
@@ -24,17 +25,19 @@ function ForgotPassword() {
             <p className="text text_type_main-medium mb-6">
                 Восстановление пароля
             </p>
-            <EmailInput
-                name={'email'}
-                isIcon={false}
-                onChange={onChange}
-                value={email}
-                extraClass="mb-6"
-                placeholder={'Укажите e-mail'}
-            />
-            <Button htmlType="button" type="primary" size="medium" extraClass="mb-20" onClick={onClick}>
-                Восстановить
-            </Button>
+            <form onSubmit={(e) => postResetPassword(e)} className={modalStyle.form}>
+                <EmailInput
+                    name={'email'}
+                    isIcon={false}
+                    onChange={onChange}
+                    value={email}
+                    extraClass="mb-6"
+                    placeholder={'Укажите e-mail'}
+                />
+                <Button htmlType="submit" type="primary" size="medium" extraClass="mb-20">
+                    Восстановить
+                </Button>
+            </form>
             <p className="text text_type_main-default text_color_inactive mb-4">
                 Вспомнили пароль? <Link to='/login' className={`${modalStyle.link} text text_type_main-default`}>
                 Войти</Link>

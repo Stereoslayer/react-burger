@@ -1,26 +1,15 @@
 import ingredientDetailsStyle from './ingredient-details.module.css';
 import {useParams} from "react-router-dom";
-import React, {useEffect, useState} from "react";
-import {getIngredients} from "../../services/actions/ingredients";
-import {RootState, useSelector, useDispatch} from "../../utils/types";
+import React from "react";
+import {useSelector} from "../../utils/types";
 
 
 function IngredientDetails() {
-    const [loaded, setLoaded] = useState(false);
-    const dispatch = useDispatch();
     const {id} = useParams<{ id?: string }>();
-    const {ingredients} = useSelector((state: RootState) => state.ingredients);
+    const {ingredients} = useSelector((state) => state.ingredients);
     const ingredient: any = ingredients.find(item => item._id === id);
 
-    useEffect(() => {
-        dispatch(getIngredients())
-            .then(() => {
-                setLoaded(true);
-            })
-    }, []);
-
-
-    return loaded ? (
+    return (
         <div className={ingredientDetailsStyle.box}>
             <div className={ingredientDetailsStyle.title}>
                 <h2 className="text text_type_main-large mt-3">Детали ингредиента</h2></div>
@@ -40,7 +29,7 @@ function IngredientDetails() {
                 </li>
             </ul>
         </div>
-    ) : null
+    )
 }
 
 

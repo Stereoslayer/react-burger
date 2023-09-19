@@ -1,9 +1,9 @@
 import {TWsActionsType} from "../actions/wsActions";
-import {TWsUserActionsType} from "../actions/wsActionsUser";
 import {AnyAction, Middleware, MiddlewareAPI} from "redux";
 import {AppDispatch, RootState} from "../../utils/types";
 
-export const socketMiddleware = (wsUrl: string, wsActions: TWsActionsType | TWsUserActionsType, user: boolean): Middleware => {
+const wsUrl: string = 'wss://norma.nomoreparties.space/orders';
+export const socketMiddleware = (wsActions: TWsActionsType): Middleware => {
     return ((store: MiddlewareAPI<AppDispatch, RootState>) => {
         let socket: WebSocket | null = null;
 
@@ -11,12 +11,10 @@ export const socketMiddleware = (wsUrl: string, wsActions: TWsActionsType | TWsU
             const {dispatch} = store;
             const {type, payload} = action;
             const {wsInit, wsSendMessage, onOpen, onClose, onError, onMessage} = wsActions;
-            const token = localStorage.getItem('accessToken')?.replace('Bearer ', '');
             let wsCheckOpen: boolean | null = null;
 
             if (type === wsInit) {
-                socket = user ? new WebSocket(`${wsUrl}?token=${token}`) :
-                    socket = new WebSocket(`${wsUrl}/all`);
+                socket = new WebSocket(`${wsUrl}${payload}`)
                 wsCheckOpen = true;
             }
 
@@ -36,8 +34,7 @@ export const socketMiddleware = (wsUrl: string, wsActions: TWsActionsType | TWsU
                 };
 
                 socket.onclose = event => {
-                    wsCheckOpen ? socket = user ? new WebSocket(`${wsUrl}?token=${token}`) :
-                            socket = new WebSocket(`${wsUrl}/all`) :
+                    wsCheckOpen ? socket = new WebSocket(`${wsUrl}${payload}`) :
                         dispatch({type: onClose, payload: event});
                 };
 

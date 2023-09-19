@@ -22,10 +22,10 @@ function App() {
     const dispatch = useDispatch();
     const accessToken = localStorage.getItem('accessToken');
     const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         if (accessToken) {
             setLoading(true);
-            // @ts-ignore
             dispatch(getUser()).finally(() => setLoading(false));
         } else {
             setLoading(false);
@@ -33,7 +33,6 @@ function App() {
     }, [accessToken]);
 
     useEffect(() => {
-        // @ts-ignore
         dispatch(getIngredients())
     }, [])
 

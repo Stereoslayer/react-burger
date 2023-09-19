@@ -4,28 +4,22 @@ import burgerConstructorStyle from './burger-constructor.module.css';
 import Modal from "../modal/modal";
 import OrderAccepted from "../order-accepted/order-accepted";
 import {useDrop} from "react-dnd";
-import {RootState, TIngredientType, useDispatch, useSelector} from '../../utils/types';
+import {TIngredientType, useDispatch, useSelector} from '../../utils/types';
 import update from 'immutability-helper';
 import SortableIngredients from "../sortable-ingredients/sortable-ingredients";
 import {ADD_ITEM, SORT_ITEMS} from "../../services/actions/burger-constructor";
 import {HIDE_ORDER_DETAILS} from "../../services/actions/popup";
-import {createOrder, POST_ORDER_CLEAR_STORE} from "../../services/actions/order";
+import {clearConstructor, createOrder, POST_ORDER_CLEAR_STORE, showOrderDetails} from "../../services/actions/order";
 import {v4 as uuidv4} from 'uuid';
 import {useNavigate} from "react-router-dom";
 
-const order = (store: RootState) => store.order.number;
-const orderInfo = (store: RootState) => store.orderDetails;
-const otherIngredients = (store: RootState) => store.burgerConstructor;
-const success = (store: RootState) => store.order.success;
-const userState = (store: RootState) => store.user;
-
 function BurgerConstructor() {
     const dispatch = useDispatch();
-    const ingredientItems = useSelector(otherIngredients);
-    const orderNumber = useSelector(order);
-    const orderDetails = useSelector(orderInfo);
-    const orderSuccess = useSelector(success);
-    const user = useSelector(userState);
+    const ingredientItems = useSelector((state) => state.burgerConstructor);
+    const orderNumber = useSelector((state) => state.order.number);
+    const orderDetails = useSelector((state) => state.orderDetails);
+    const orderSuccess = useSelector((state) => state.order.success);
+    const user = useSelector((state) => state.user);
     const navigate = useNavigate();
 
     const totalSum = React.useMemo(() =>
@@ -38,7 +32,10 @@ function BurgerConstructor() {
         drop(item: TIngredientType) {
             dispatch({
                 type: ADD_ITEM,
-                payload: item
+                payload: {
+                    ...item,
+                    uniqueId: uuidv4()
+                }
             })
         }
     });
@@ -54,8 +51,7 @@ function BurgerConstructor() {
 
     const prepareIngredients = () => {
         const bun = ingredientItems.find(item => item.type === 'bun');
-        // @ts-ignore
-        return [...ingredientItems.map(x => x._id), bun._id]
+        return [...ingredientItems.map(x => x._id), bun?._id]
     }
 
     const postOrder = () => {
@@ -70,22 +66,22 @@ function BurgerConstructor() {
                 },
                 body: JSON.stringify({ingredients: prepareIngredients()})
             };
-            // @ts-ignore
             dispatch(createOrder(requestOptions));
+            dispatch(showOrderDetails());
+            dispatch(clearConstructor());
         }
     };
 
     const moveItem = useCallback((dragIndex: number, hoverIndex: number) => {
         const bunsIngredients = ingredientItems.filter(item => item.type === 'bun')
         const otherIngredients = ingredientItems.filter(item => item.type !== 'bun')
-        // @ts-ignore
         const sortedIngredients = update(otherIngredients, {
             $splice:
                 [
                     [dragIndex, 1],
                     [hoverIndex, 0, otherIngredients[dragIndex]],
-                ],// @ts-ignore
-        }, [otherIngredients])
+                ],
+        })
         const sortedItemsWithBuns = [...bunsIngredients, ...sortedIngredients]
         dispatch({
             type: SORT_ITEMS,
@@ -97,12 +93,13 @@ function BurgerConstructor() {
     let hasBun = false;
     React.useMemo(() => ingredientItems.forEach(item => item.type === 'bun' && (item.type === 'bun' ? (hasBun = true) : (hasBun = false))), [ingredientItems]);
 
+
     return (
         <section className={`${burgerConstructorStyle.container} mt-15`} ref={dropTarget}>
             <div className="mb-4 mr-4">
                 {ingredientItems.length > 0 && ingredientItems.map((item) => item.type === 'bun' ?
                     <ConstructorElement
-                        key={uuidv4() + 'top'}
+                        key={item.uniqueId}
                         type="top"
                         isLocked={true}
                         text={item.name + ' (верх)'}
@@ -114,7 +111,7 @@ function BurgerConstructor() {
             </div>
             <div className={`${burgerConstructorStyle.inner} pr-2`}>
                 {ingredientItems.length > 0 && ingredientItems.map((item, index) => item.type !== 'bun' ?
-                    <SortableIngredients key={uuidv4()} ingredient={item} index={index} moveItem={moveItem}
+                    <SortableIngredients key={item.uniqueId} ingredient={item} index={index} moveItem={moveItem}
                                          id={`${item._id}${index}`}/>
                     : '')
                 }
@@ -122,7 +119,7 @@ function BurgerConstructor() {
             <div className="mt-4 mr-4">
                 {ingredientItems.length > 0 && ingredientItems.map((item) => item.type === 'bun' ?
                     <ConstructorElement
-                        key={uuidv4() + 'bot'}
+                        key={item.uniqueId}
                         type="bottom"
                         isLocked={true}
                         text={item.name + ' (низ)'}
@@ -141,7 +138,7 @@ function BurgerConstructor() {
                         disabled={!hasBun}>Оформить
                     заказ</Button>
             </div>
-            {orderDetails.visible && orderSuccess &&
+            {orderDetails.visible &&
                 <Modal onClose={popupClose}>
                     <OrderAccepted orderNumber={orderNumber}/>
                 </Modal>}

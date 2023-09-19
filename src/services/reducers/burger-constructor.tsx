@@ -1,9 +1,9 @@
 import {ADD_ITEM, DELETE_ALL_ITEMS, DELETE_ITEM, SORT_ITEMS, TItemActions} from "../actions/burger-constructor";
-import {TIngredientType} from "../../utils/types";
+import {TIngredientWithUniqueIdType} from "../../utils/types";
 
-const burgerConstructorInitialState: Array<TIngredientType> = [];
+const burgerConstructorInitialState: Array<TIngredientWithUniqueIdType> = [];
 
-export const burgerConstructorReducer = (state = burgerConstructorInitialState, action: TItemActions): Array<TIngredientType> => {
+export const burgerConstructorReducer = (state = burgerConstructorInitialState, action: TItemActions): Array<TIngredientWithUniqueIdType> => {
     switch (action.type) {
         case ADD_ITEM:
             let bun = state.find((x, idx) => x.type === 'bun');

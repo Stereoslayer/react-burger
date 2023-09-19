@@ -1,10 +1,8 @@
-import {Navigate, Route, RouteProps, useLocation} from "react-router-dom";
-import {RootState, useSelector} from "../../utils/types";
-
-const userState = (state: RootState) => state.user;
+import {Navigate, RouteProps, useLocation} from "react-router-dom";
+import {useSelector} from "../../utils/types";
 
 function ProtectedRouteElement({loggedIn, element}: RouteProps & { loggedIn: boolean }) {
-    const {userData} = useSelector(userState);
+    const {userData} = useSelector((state) => state.user);
     const location = useLocation();
 
     return (

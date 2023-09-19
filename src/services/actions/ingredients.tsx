@@ -26,7 +26,7 @@ export function getIngredients() {
         dispatch({
             type: GET_ING_REQUEST
         })
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>((resolve) => {
             request(endPoint)
                 .then(res => {
                     dispatch({
@@ -39,7 +39,7 @@ export function getIngredients() {
                     dispatch({
                         type: GET_ING_ERROR
                     })
-                    reject();
+
                 })
         })
 

@@ -1,11 +1,10 @@
 import {CurrencyIcon, FormattedDate} from "@ya.praktikum/react-developer-burger-ui-components";
 import orderDetailsElementStyle from '../order-details-element/order-details-element.module.css';
-import {v4 as uuidv4} from 'uuid';
 import {useLocation, useNavigate} from "react-router-dom";
-import {RootState, TOrderDetailsElementType, useSelector} from "../../utils/types";
+import {TOrderDetailsElementType, useSelector} from "../../utils/types";
 
 function OrderDetailsElement({data}: TOrderDetailsElementType) {
-    const {ingredients} = useSelector((state: RootState) => state.ingredients);
+    const {ingredients} = useSelector((state) => state.ingredients);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -27,7 +26,7 @@ function OrderDetailsElement({data}: TOrderDetailsElementType) {
                 const ingOverflowCount = formattedIngredients.length - 5;
                 return (
                     <li className={orderDetailsElementStyle.list_item + ' ' + orderDetailsElementStyle.last_image_list_item}
-                        key={uuidv4()}>
+                        key={ingOverflow._id}>
                         <div className={orderDetailsElementStyle.last_image_box}>
                             <img className={orderDetailsElementStyle.image} alt={ingOverflow.name}
                                  src={ingOverflow.image}/>
@@ -87,7 +86,7 @@ function OrderDetailsElement({data}: TOrderDetailsElementType) {
                         if (index < 5) {
                             return (
                                 <li className={orderDetailsElementStyle.list_item + ' ' + elementsStyles['idx_' + index]}
-                                    key={uuidv4()}>
+                                    key={index}>
                                     <img className={orderDetailsElementStyle.image} alt={item?.name}
                                          src={item?.image}/></li>)
                         }

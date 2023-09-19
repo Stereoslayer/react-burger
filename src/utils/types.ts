@@ -6,7 +6,6 @@ import {TPostOrderActions} from "../services/actions/order";
 import {TIngDetailsActions, TOrderDetailsActions} from "../services/actions/popup";
 import {TUserActions} from "../services/actions/user";
 import {TWsActions} from "../services/actions/wsActions";
-import {TWsUserActions} from "../services/actions/wsActionsUser";
 import {ThunkDispatch} from "redux-thunk";
 
 
@@ -17,8 +16,7 @@ export type TApplicationActions =
     | TIngDetailsActions
     | TOrderDetailsActions
     | TUserActions
-    | TWsActions
-    | TWsUserActions;
+    | TWsActions;
 
 export type RootState = ReturnType<typeof store.getState>;
 
@@ -40,11 +38,13 @@ export type TIngredientType = {
     image_mobile: string,
     image_large: string,
     __v: number,
+    count?: number;
 };
 
-export type TIngredientWithCountType = TIngredientType & {
-    count: number;
-};
+export type TIngredientWithUniqueIdType = TIngredientType & {
+    uniqueId: string;
+}
+
 
 export type TIngredientWithIndexType = TIngredientType & {
     index: number;
@@ -145,12 +145,6 @@ export type TWsDataType = {
 }
 
 export type TWsInitialStateType = {
-    wsConnected: boolean,
-    data: TWsDataType | null,
-    error: any
-}
-
-export type TWsUserInitialStateType = {
     wsConnected: boolean,
     data: TWsDataType | null,
     error: any

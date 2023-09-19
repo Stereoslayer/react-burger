@@ -4,7 +4,7 @@ import React, {useEffect} from "react";
 import {TOrderDetailsType, useDispatch, useSelector} from "../../utils/types";
 import Modal from "../../components/modal/modal";
 import {Outlet, useLocation, useNavigate} from "react-router-dom";
-import {WS_CONNECTION_CLOSED_USER, WS_CONNECTION_START_USER} from "../../services/actions/wsActionsUser";
+import {WS_CONNECTION_CLOSED, WS_CONNECTION_START} from "../../services/actions/wsActions";
 
 function OrderHistory() {
     const navigate = useNavigate();
@@ -13,14 +13,16 @@ function OrderHistory() {
         navigate('/profile/orders', {state: {modal: false}});
     };
     const dispatch = useDispatch();
-    const orders = useSelector((state) => state.wsUser.data?.orders);
+    const orders = useSelector((state) => state.ws.data?.orders);
+
+    const token = localStorage.getItem('accessToken')?.replace('Bearer ', '');
 
     useEffect(
         () => {
-            dispatch({type: WS_CONNECTION_START_USER});
+            dispatch({type: WS_CONNECTION_START, payload: `?token=${token}`});
 
             return () => {
-                dispatch({type: WS_CONNECTION_CLOSED_USER});
+                dispatch({type: WS_CONNECTION_CLOSED});
             }
         }, [dispatch]);
 

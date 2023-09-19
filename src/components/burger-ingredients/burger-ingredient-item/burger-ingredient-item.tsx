@@ -1,15 +1,14 @@
 import burgerIngredientItemStyle from './burger-ingredient-item.module.css'
 import {Counter, CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
-import {RootState, TIngredientPropType, useSelector} from '../../../utils/types';
+import {TIngredientPropType, useSelector} from '../../../utils/types';
 import {useDrag} from "react-dnd";
 import React, {FC} from "react";
 import {useNavigate} from "react-router-dom";
 
-const ingredients = (state: RootState) => state.burgerConstructor;
 
 const BurgerIngredientItem: FC<TIngredientPropType> = ({ingredient}) => {
     const navigate = useNavigate();
-    const ingredientItems = useSelector(ingredients);
+    const ingredientItems = useSelector((state) => state.burgerConstructor);
 
     const showIngDetails = () => {
         navigate(`ingredients/${ingredient._id}`, {state: {modal: true}});

@@ -163,7 +163,7 @@ export function registration(requestOptions: TRequestOptionsType) {
         dispatch({
             type: REGISTRATION_REQUEST
         })
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>((resolve) => {
             request(endPoint, requestOptions)
                 .then(data => {
                     dispatch({
@@ -179,7 +179,7 @@ export function registration(requestOptions: TRequestOptionsType) {
                         type: REGISTRATION_ERROR,
                         data: err
                     })
-                    reject();
+
                 })
         })
     }
@@ -191,7 +191,7 @@ export function login(requestOptions: TRequestOptionsType) {
         dispatch({
             type: LOGIN_REQUEST
         })
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>((resolve) => {
             request(endPoint, requestOptions)
                 .then(data => {
                     dispatch({
@@ -207,7 +207,7 @@ export function login(requestOptions: TRequestOptionsType) {
                     dispatch({
                         type: LOGIN_ERROR
                     })
-                    reject();
+
                 })
         })
     }
@@ -251,7 +251,7 @@ function refreshToken(token: any) {
             token
         })
     }
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>((resolve) => {
         request(endPoint, options).then((data) => {
                 localStorage.setItem('accessToken', data.accessToken);
                 localStorage.setItem('refreshToken', data.refreshToken);
@@ -260,7 +260,7 @@ function refreshToken(token: any) {
         )
             .catch(err => {
                 clearTokens();
-                reject();
+
             })
     })
 
@@ -268,7 +268,7 @@ function refreshToken(token: any) {
 
 function fetchWithRefresh(endPoint: string, options: TRequestOptionsType) {
     const url = baseUrl + endPoint;
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         refreshToken(localStorage.getItem('refreshToken')).then(() => {
             options.headers = Object.assign(options.headers || {}, {'Authorization': localStorage.getItem('accessToken')})
             resolve(fetch(url, options).then(checkResponse))
@@ -287,7 +287,7 @@ export function getUser() {
         dispatch({
             type: GETUSER_REQUEST
         })
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>((resolve) => {
             request(endPoint, options)
                 .then(data => {
                         dispatch({
@@ -311,7 +311,7 @@ export function getUser() {
                                 type: GETUSER_ERROR,
                                 data: err
                             })
-                            reject();
+
                         })
                 })
         })
@@ -331,7 +331,7 @@ export function updateUser(user: TUserType) {
         dispatch({
             type: UPDATEUSER_REQUEST
         })
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>((resolve) => {
             request(endPoint, options)
                 .then(data => {
                         dispatch({
@@ -346,7 +346,7 @@ export function updateUser(user: TUserType) {
                         type: UPDATEUSER_ERROR,
                         data: err
                     })
-                    reject();
+
                 })
         })
 
@@ -366,7 +366,7 @@ export function resetPassword(email: string) {
         dispatch({
             type: RESETPASSWORD_REQUEST
         })
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>((resolve) => {
             request(endPoint, options)
                 .then(data => {
                         dispatch({
@@ -380,7 +380,7 @@ export function resetPassword(email: string) {
                     dispatch({
                         type: RESETPASSWORD_ERROR
                     })
-                    reject();
+
                 })
         })
 
@@ -401,7 +401,7 @@ export function changePassword(password: string, token: string) {
         dispatch({
             type: CHANGEPASSWORD_REQUEST
         })
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>((resolve) => {
             request(endPoint, options)
                 .then(data => {
                         dispatch({
@@ -414,7 +414,7 @@ export function changePassword(password: string, token: string) {
                     dispatch({
                         type: CHANGEPASSWORD_ERROR
                     })
-                    reject();
+
                 })
         })
 

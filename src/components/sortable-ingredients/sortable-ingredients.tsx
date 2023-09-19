@@ -72,8 +72,6 @@ function SortableIngredients({ingredient, index, moveItem, id}: TSortableIngredi
                 thumbnail={image}
                 extraClass={burgerConstructorStyle.element}
                 handleClose={() => handleDeleteItem(index)}
-                // @ts-ignore
-                moveItem={moveItem}
             />
         </li>
     )

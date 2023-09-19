@@ -1,42 +1,32 @@
 import {CurrencyIcon, FormattedDate} from "@ya.praktikum/react-developer-burger-ui-components";
 import {useLocation, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {WS_CONNECTION_CLOSED, WS_CONNECTION_START} from "../../services/actions/wsActions";
 import orderDetailsStyle from './order-details.module.css';
-import {useSelector, useDispatch, RootState, TIngredientWithCountType} from "../../utils/types";
+import {useSelector, TIngredientType} from "../../utils/types";
 
 function OrderDetails() {
-    const dispatch = useDispatch();
     const location = useLocation();
-    const {ingredients} = useSelector((state: RootState) => state.ingredients);
+    const {ingredients} = useSelector((state) => state.ingredients);
     const {id} = useParams<{ id?: string }>();
-    const orders = useSelector((state: RootState) => state.ws.data?.orders);
+    const orders = useSelector((state) => state.ws.data?.orders);
     const order = orders?.find((el) => el._id === id);
 
-    useEffect(
-        () => {
-            dispatch({type: WS_CONNECTION_START});
 
-            return () => {
-                dispatch({type: WS_CONNECTION_CLOSED});
-            }
-        }, [dispatch]);
-
-    const [formattedIngredients, setFormattedIngredients] = useState(Array<TIngredientWithCountType>);
+    const [formattedIngredients, setFormattedIngredients] = useState(Array<TIngredientType>);
 
     useEffect(() => {
         if (order) {
             const tempIngredients = order.ingredients;
-            const uniqueIngredients = [...new Set<string>(tempIngredients)];
-            // @ts-ignore
-            setFormattedIngredients(uniqueIngredients.map((item) => ingredients.find((el) => el._id === item)))
+            const uniqueIngredients = [...new Set(tempIngredients)];
+            setFormattedIngredients(uniqueIngredients.map((item) => ingredients.find((el) => el._id === item)!));
             formattedIngredients.forEach((item) => {
-                const repeatingElements = tempIngredients.filter(x => x === item._id)
-                item.count = repeatingElements.length
-            })
+                const repeatingElements = tempIngredients.filter(x => x === item._id);
+                item.count = repeatingElements.length;
+            });
         }
-    }, [order])
 
+    }, [order]);
+    console.log(formattedIngredients)
 
     const getStatus = () => {
         if (order?.status === 'done') {

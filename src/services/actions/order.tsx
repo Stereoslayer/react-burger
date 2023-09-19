@@ -37,24 +37,34 @@ export function createOrder(requestOptions: TRequestOptionsType) {
         dispatch({
             type: POST_ORDER_REQUEST
         })
-        request(endPoint, requestOptions)
-            .then(data =>
-                dispatch({
-                    type: POST_ORDER_SUCCESS,
-                    data: data
-                }))
-            // @ts-ignore
-            .then(dispatch({
-                type: SHOW_ORDER_DETAILS
-            }))
-            // @ts-ignore
-            .then(dispatch({
-                type: DELETE_ALL_ITEMS
-            }))
-            .catch(err => {
-                dispatch({
-                    type: POST_ORDER_ERROR
+        return new Promise((resolve) => {
+            request(endPoint, requestOptions)
+                .then(data =>
+                    dispatch({
+                        type: POST_ORDER_SUCCESS,
+                        data: data
+                    }))
+                .catch(err => {
+                    dispatch({
+                        type: POST_ORDER_ERROR
+                    })
                 })
-            })
+        })
+    }
+}
+
+export function showOrderDetails() {
+    return function (dispatch: AppDispatch) {
+        dispatch({
+            type: SHOW_ORDER_DETAILS
+        })
+    }
+}
+
+export function clearConstructor() {
+    return function (dispatch: AppDispatch) {
+        dispatch({
+            type: DELETE_ALL_ITEMS
+        })
     }
 }
