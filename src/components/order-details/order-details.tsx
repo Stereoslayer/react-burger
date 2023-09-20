@@ -22,7 +22,7 @@ function OrderDetails() {
                 item.count = repeatingElements.length;
             });
         }
-    }, [formattedIngredients.length]);
+    }, [order, formattedIngredients.length]);
 
 
     const getStatus = () => {
