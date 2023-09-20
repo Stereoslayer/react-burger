@@ -9,7 +9,7 @@ function IngredientDetails() {
     const {ingredients} = useSelector((state) => state.ingredients);
     const ingredient: any = ingredients.find(item => item._id === id);
 
-    return (
+    return ingredient ? (
         <div className={ingredientDetailsStyle.box}>
             <div className={ingredientDetailsStyle.title}>
                 <h2 className="text text_type_main-large mt-3">Детали ингредиента</h2></div>
@@ -29,7 +29,7 @@ function IngredientDetails() {
                 </li>
             </ul>
         </div>
-    )
+    ) : null
 }
 
 

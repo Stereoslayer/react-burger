@@ -10,8 +10,6 @@ function OrderDetails() {
     const {id} = useParams<{ id?: string }>();
     const orders = useSelector((state) => state.ws.data?.orders);
     const order = orders?.find((el) => el._id === id);
-
-
     const [formattedIngredients, setFormattedIngredients] = useState(Array<TIngredientType>);
 
     useEffect(() => {
@@ -24,9 +22,8 @@ function OrderDetails() {
                 item.count = repeatingElements.length;
             });
         }
+    }, [formattedIngredients.length]);
 
-    }, [order]);
-    console.log(formattedIngredients)
 
     const getStatus = () => {
         if (order?.status === 'done') {
@@ -45,6 +42,7 @@ function OrderDetails() {
             } else {
                 return 0
             }
+
         }, 0)
     }
 
